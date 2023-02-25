@@ -25,6 +25,7 @@ class RegisteredUserController extends Controller
     public function getIndex()
     {
         //ログインページを表示
+        return view('/');
     }
 
     public function postIndex()
