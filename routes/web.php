@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('welcome');//これをindexに変更する
 });
 
 Route::get('/dashboard', function () {
