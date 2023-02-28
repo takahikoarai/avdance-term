@@ -25,3 +25,5 @@ require __DIR__.'/auth.php';
 
 Route::get('/login', [LoginController::class, 'getIndex']);
 Route::post('/login', [LoginController::class, 'postIndex']);
+
+Route::get('/', [AttendanceController::class, 'index'])->middleware('auth');
