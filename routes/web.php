@@ -22,3 +22,6 @@ Route::get('/dashboard', function () {
 })->middleware(['auth'])->name('dashboard');
 
 require __DIR__.'/auth.php';
+
+Route::get('/login', [LoginController::class, 'getIndex']);
+Route::post('/login', [LoginController::class, 'postIndex']);
