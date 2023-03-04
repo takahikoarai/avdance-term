@@ -63,7 +63,29 @@ class AttendanceController extends Controller
     //退勤アクション
     public function workEnd()
     {
-        
+        $user = Auth::user();
+        $attendance = Attendance::where('user_id', $user->id)->latest()->first();
+
+        if($attendance){
+            if(empty($attendance->end_time)){
+                $attendance->update([
+                    'end_time' => Carbon::now()
+                ]);
+                return redirect()->back()->with('message','お疲れ様でした');
+            }else{
+                $today = new Carbon();
+                $day = $today->day;
+                $oldAttendanceEndTime = new carbon();
+                $oldAttendanceEndTimeDay = $oldAttendanceEndTime->day;
+                if($day == $oldAttendanceEndTimeDay){
+                    return redirect()->back()->with('massage', '勤務終了済みです');
+                }else{
+                    return redirect()->back()->with('massage', '勤務開始打刻をしてください');
+                }
+            }
+        }else{
+            return redirect()->back()->with('massage', '勤務開始打刻をしてください');
+        }
     }
 
     //休憩開始アクション
