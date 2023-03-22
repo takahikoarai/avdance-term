@@ -139,8 +139,24 @@ class AttendanceController extends Controller
         return redirect()->back();
     }
 
-    public function attendances()
+    public function dailyPerformance()
     {
+        //「日付一覧」クリックで日付別勤怠ページを表示、日別で勤怠一覧を取得
+        // $user = Auth::user();
+        //認証すると全ユーザー情報を取得できないのでは？
+        $allAttendance = Attendance::all();
+        $allRest = Rest::where('attendance_id', $allAttendance->id);
+
+        //まず日付で検索をかける
+        
+
+        $today = Carbon::today();
+        $dailyAttendance = Attendance::where('date');
+
+        //休憩時間
+
+        //必要な情報はname(users),start_time(attendances),end_time(attendances),start_time(rests),end_time(rests)
+        //viewにわたす情報は、
         
     }
 

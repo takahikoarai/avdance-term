@@ -1,0 +1,1 @@
+<p>ここはindex.blade.phpです</p>

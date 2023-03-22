@@ -11,7 +11,7 @@ class LoginController extends Controller
     public function getIndex()
     {
         //ログインページを表示
-        return view('login');
+        return view('auth.login');
     }
 
     public function postIndex(LoginRequest $request)

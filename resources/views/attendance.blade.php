@@ -1,0 +1,1 @@
+<p>ここはattendnace.blade.phpです</p>

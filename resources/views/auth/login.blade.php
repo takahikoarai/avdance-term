@@ -52,5 +52,6 @@
                 </x-button>
             </div>
         </form>
+        <a href="{{ route('register') }}" class="ml-4 text-sm text-gray-700 dark:text-gray-500 underline">Register</a>
     </x-auth-card>
 </x-guest-layout>

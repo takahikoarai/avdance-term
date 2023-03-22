@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AttendanceController;
+use App\Http\Controllers\LoginController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,9 +15,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');//これをindexに変更する
-});
+// Route::get('/', function () {
+//     return view('attendance');//これをindexに変更する
+// })->name('login');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -23,7 +25,7 @@ Route::get('/dashboard', function () {
 
 require __DIR__.'/auth.php';
 
-Route::get('/login', [LoginController::class, 'getIndex']);
-Route::post('/login', [LoginController::class, 'postIndex']);
+Route::get('/login', [LoginController::class, 'getIndex'])->name('login');
+Route::post('/login', [LoginController::class, 'postIndex'])->name('login');
 
 Route::get('/', [AttendanceController::class, 'index'])->middleware('auth');
