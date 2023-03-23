@@ -2,23 +2,11 @@
 
 @section('title', '打刻ページ')
 @section('content')
-  <header>
-    <div class="header__inner">
-      <div class="header__title">
-        <a href="/" class="header__title">Atte</a>
-      </div>
-      <nav>
-        <ul>
-          <li class="nav__item"><a href="/">ホーム</a></li>
-          <li class="nav__item"><a href="/attendance">日付一覧</a></li>
-          <li class="nav__item"><a href="{{ route('logout') }}">ログアウト</a></li>
-        </ul>
-      </nav>
-    </div>
-  </header>
   <main>
     <div class="main__title">
-      <p>（ユーザー名）さんお疲れ様です！</p>
+      @if(Auth::check())
+        <p>{{$user->name}}さんお疲れ様です！</p>
+      @endif
     </div>
     <div class="main__attendance">
       <div class="attendance__left">
@@ -43,7 +31,4 @@
       </div>
     </div>
   </main>
-  <footer>
-    <small>Atte, Inc.</small>
-  </footer>
 @endsection

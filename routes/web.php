@@ -25,6 +25,7 @@ Route::get('/dashboard', function () {
 
 require __DIR__.'/auth.php';
 
+
 Route::get('/login', [LoginController::class, 'getIndex'])->name('login');
 Route::post('/login', [LoginController::class, 'postIndex'])->name('login');
 
@@ -32,4 +33,4 @@ Route::get('/', [AttendanceController::class, 'index'])->middleware('auth');
 
 Route::get('/attendance',[AttendanceController::class, 'dailyPerformance']);
 
-Route::post('workStart', [AttendanceController::class, 'workStart']);
+Route::post('/workStart', [AttendanceController::class, 'workStart']);

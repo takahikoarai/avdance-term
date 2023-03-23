@@ -1,3 +1,7 @@
+@extends('layouts.default')
+
+@secttion('title', '会員登録')
+@section('content')
 <x-guest-layout>
     <x-auth-card>
         <x-slot name="logo">
@@ -58,3 +62,4 @@
         
     </x-auth-card>
 </x-guest-layout>
+@endsection

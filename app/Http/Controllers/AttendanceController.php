@@ -13,7 +13,9 @@ class AttendanceController extends Controller
     {
         //打刻ページを表示
         if(Auth::check()){
-            return view('index');
+            $user = Auth::user();
+            $param = ['user' => $user];
+            return view('index', $param);
         }else{
             return redirect('/login');
         }
