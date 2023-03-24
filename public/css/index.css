@@ -49,6 +49,10 @@ main{
   margin-bottom: 30px;
 }
 
+.error{
+  text-align: center;
+}
+
 .main__attendance{
   display: flex;
   justify-content: center;

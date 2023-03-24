@@ -8,6 +8,7 @@
         <p>{{$user->name}}さんお疲れ様です！</p>
       @endif
     </div>
+    <p class="error">{{ session('message') }}</p>
     <div class="main__attendance">
       <div class="attendance__left">
         <form action="/workStart" method="POST" class="timestamp">

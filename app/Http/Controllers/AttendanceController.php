@@ -92,15 +92,14 @@ class AttendanceController extends Controller
     }
 
     //休憩開始アクション
-    public function restStart()
+    public function restStart(Request $request)
     {
         $user = Auth::user();//ユーザー認証
         $attendance = Attendance::where('user_id', $user->id)->latest()->first();//attendaceテーブルの最新のレコード1件を取得
         $oldrest = Rest::where('attendance_id', $attendance->id)->first();//attendanceテーブルのidにひもづくrestテーブルのレコードのうち最新の1件を取得
 
         //休憩開始を連続で押すのを防ぎたい
-        // if($oldrest->end_time){
-        // }
+        $request->session()->regenerateToken();
 
         if($oldrest){
             if($attendance->start_time && $oldrest->start_time && !$attendance->end_time){

@@ -34,4 +34,6 @@ Route::get('/', [AttendanceController::class, 'index'])->middleware('auth');
 Route::get('/attendance',[AttendanceController::class, 'dailyPerformance']);
 
 Route::post('/workStart', [AttendanceController::class, 'workStart']);
-Route::post('restStart', [AttendanceController::class, 'restStart']);
+Route::post('/workEnd', [AttendanceController::class, 'workEnd']);
+Route::post('/restStart', [AttendanceController::class, 'restStart']);
+Route::post('/restEnd', [AttendanceController::class, 'restEnd']);
