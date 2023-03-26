@@ -81,7 +81,7 @@ class AttendanceController extends Controller
             'isWorkStarted' => $isWorkStarted,
             'isWorkEnded' => $isWorkEnded,
         ];
-        return view('/', $param);
+        return view('/index', $param);
     }
 
     //退勤アクション
@@ -95,20 +95,20 @@ class AttendanceController extends Controller
                 $attendance->update([
                     'end_time' => Carbon::now()
                 ]);
-                return redirect()->back()->with('message','お疲れ様でした');
+                return redirect()->back();
             }else{
                 $today = new Carbon();
                 $day = $today->day;
                 $oldAttendanceEndTime = new carbon();
                 $oldAttendanceEndTimeDay = $oldAttendanceEndTime->day;
                 if($day == $oldAttendanceEndTimeDay){
-                    return redirect()->back()->with('message', '勤務終了済みです');
+                    return redirect()->back();
                 }else{
-                    return redirect()->back()->with('message', '勤務開始打刻をしてください');
+                    return redirect()->back();
                 }
             }
         }else{
-            return redirect()->back()->with('message', '勤務開始打刻をしてください');
+            return redirect()->back();
         }
     }
 
