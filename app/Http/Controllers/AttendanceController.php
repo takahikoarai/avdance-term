@@ -65,17 +65,11 @@ class AttendanceController extends Controller
     {
         $user = Auth::user();
 
-        //勤務開始時間を記録。「勤務開始」と「休憩終了」の文字がグレーに
+        //「勤務開始」判定
         $isWorkStarted = $this->didWorkStart();
-        if($isWorkStarted){
-            return redirect()->back()->with('message','出勤打刻済みです');
-        }
 
-        //退勤後に出勤を押せない制御
+        //「勤務終了」判定
         $isWorkEnded = $this->didWorkEnd();
-        if($isWorkEnded){
-            return redirect()->back()->with('message','退勤打刻済みです');
-        }
 
         Attendance::create([
             'user_id' => $user->id,
@@ -83,9 +77,10 @@ class AttendanceController extends Controller
             'start_time' => Carbon::now(),
         ]);
 
-        //文字の色を変える
-
-        $param = ['isWorkStarted' => $isWorkStarted];
+        $param = [
+            'isWorkStarted' => $isWorkStarted,
+            'isWorkEnded' => $isWorkEnded,
+        ];
         return view('/', $param);
     }
 
