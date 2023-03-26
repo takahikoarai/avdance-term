@@ -11,11 +11,19 @@
     <p class="error">{{ session('message') }}</p>
     <div class="main__attendance">
       <div class="attendance__left">
-        <form action="/workStart" method="POST" class="timestamp">
-          @csrf
-          <button class="button1">勤務開始</button>
-        </form>
-        <form action="/restStart" method="POST" class="timestamp">
+        @if($isWorkStarted || $isWorkEnded)
+        <!-- グレーアウトさせる処理を追加する -->
+          <form action="/workStart" method="POST" class="timestamp">
+            @csrf
+            <button disabled style="color:gray">勤務開始</button>
+          </form>
+        @else
+          <form action="/workStart" method="POST" class="timestamp">
+            @csrf
+            <button class="button1">勤務開始</button>
+          </form>
+        @endif
+          <form action="/restStart" method="POST" class="timestamp">
           @csrf
           <button class="button2">休憩開始</button>
         </form>

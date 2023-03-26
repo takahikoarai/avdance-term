@@ -10,13 +10,51 @@ use Carbon\Carbon;
 
 class AttendanceController extends Controller
 {
+    //「勤務開始」判定
+    private function didWorkStart()
+    {
+        $user = Auth::user();
+        $oldattendance = Attendance::where('user_id', $user->id)->latest()->first();
+        $oldDay = '';
+        if($oldattendance){
+            $oldAttendanceStartTime = new Carbon($oldattendance->start_time);
+            $oldDay = $oldAttendanceStartTime->startOfday();//Carbonインスタンスを生成することで、starOfdayメソッドが使える
+        }
+        $today = Carbon::today();
+
+        return ($oldDay == $today) && (empty($oldattendance->end_time));
+    }
+
+    //「勤務終了」判定
+    private function didWorkEnd()
+    {
+        $user = Auth::user();
+        $oldattendance = Attendance::where('user_id', $user->id)->latest()->first();
+        $oldDay = '';
+        
+        if($oldattendance){
+            $oldAttendanceEndTime = new Carbon($oldattendance->end_time);
+            $oldDay = $oldAttendanceEndTime->startofDay();
+        }
+
+        $today = Carbon::today();
+
+        return ($oldDay == $today);
+    }
+
     public function index()
     {
         //打刻ページを表示
         if(Auth::check()){
+            $isWorkStarted = $this->didWorkStart();
+            $isWorkEnded = $this->didWorkEnd();
             $user = Auth::user();
-            $param = ['user' => $user];
-            return view('index', $param);
+            $param = [
+                'user' => $user,
+                'isWorkStarted' => $isWorkStarted,
+                'isWorkEnded' => $isWorkEnded,
+            ];
+            return view('/index', $param);
         }else{
             return redirect('/login');
         }
@@ -25,30 +63,17 @@ class AttendanceController extends Controller
     //出勤アクション
     public function workStart()
     {
-        //勤務開始時間を記録。「勤務開始」と「休憩終了」の文字がグレーに
         $user = Auth::user();
-        $oldattendance = Attendance::where('user_id', $user->id)->latest()->first();
 
-        $oldDay = '';
-
-        //退勤前に2回押せない制御
-        if($oldattendance){
-            $oldAttendanceStartTime = new Carbon($oldattendance->start_time);
-            $oldDay = $oldAttendanceStartTime->startOfday();//Carbonインスタンスを生成することで、starOfdayメソッドが使える
-        }
-        $today = Carbon::today();
-
-        if(($oldDay == $today) && (empty($oldattendance->end_time))){
+        //勤務開始時間を記録。「勤務開始」と「休憩終了」の文字がグレーに
+        $isWorkStarted = $this->didWorkStart();
+        if($isWorkStarted){
             return redirect()->back()->with('message','出勤打刻済みです');
         }
 
         //退勤後に出勤を押せない制御
-        if($oldattendance){
-            $oldAttendanceEndTime = new Carbon($oldattendance->end_time);
-            $oldDay = $oldAttendanceEndTime->startofDay();
-        }
-
-        if(($oldDay == $today)){
+        $isWorkEnded = $this->didWorkEnd();
+        if($isWorkEnded){
             return redirect()->back()->with('message','退勤打刻済みです');
         }
 
@@ -60,7 +85,8 @@ class AttendanceController extends Controller
 
         //文字の色を変える
 
-        return redirect()->back();
+        $param = ['isWorkStarted' => $isWorkStarted];
+        return view('/', $param);
     }
 
     //退勤アクション
@@ -81,13 +107,13 @@ class AttendanceController extends Controller
                 $oldAttendanceEndTime = new carbon();
                 $oldAttendanceEndTimeDay = $oldAttendanceEndTime->day;
                 if($day == $oldAttendanceEndTimeDay){
-                    return redirect()->back()->with('massage', '勤務終了済みです');
+                    return redirect()->back()->with('message', '勤務終了済みです');
                 }else{
-                    return redirect()->back()->with('massage', '勤務開始打刻をしてください');
+                    return redirect()->back()->with('message', '勤務開始打刻をしてください');
                 }
             }
         }else{
-            return redirect()->back()->with('massage', '勤務開始打刻をしてください');
+            return redirect()->back()->with('message', '勤務開始打刻をしてください');
         }
     }
 
@@ -96,6 +122,19 @@ class AttendanceController extends Controller
     {
         $user = Auth::user();//ユーザー認証
         $attendance = Attendance::where('user_id', $user->id)->latest()->first();//attendaceテーブルの最新のレコード1件を取得
+
+        if(!$attendance){
+            return redirect()->back()->with('message', '勤務開始打刻をしてください');
+        }else{
+            $today = new Carbon();
+            $day = $today->day;
+            $oldAttendanceEndTime = new carbon();
+            $oldAttendanceEndTimeDay = $oldAttendanceEndTime->day;
+            if($day == $oldAttendanceEndTimeDay){
+                return redirect()->back()->with('message', '勤務終了済みです');
+            }
+        }    
+
         $oldrest = Rest::where('attendance_id', $attendance->id)->first();//attendanceテーブルのidにひもづくrestテーブルのレコードのうち最新の1件を取得
 
         //休憩開始を連続で押すのを防ぎたい
@@ -132,6 +171,19 @@ class AttendanceController extends Controller
     {
         $user = Auth::user();
         $attendance = Attendance::where('user_id', $user->id)->latest()->first();
+
+        if(!$attendance){
+            return redirect()->back()->with('message', '勤務開始打刻をしてください');
+        }else{
+            $today = new Carbon();
+            $day = $today->day;
+            $oldAttendanceEndTime = new carbon();
+            $oldAttendanceEndTimeDay = $oldAttendanceEndTime->day;
+            if($day == $oldAttendanceEndTimeDay){
+                return redirect()->back()->with('message', '勤務終了済みです');
+            }
+        }
+
         $oldrest = Rest::where('attendance_id', $attendance->id)->first();
 
         //休憩終了を連続で押せない制御は？
