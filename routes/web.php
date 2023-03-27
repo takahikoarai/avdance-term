@@ -30,6 +30,7 @@ Route::get('/login', [LoginController::class, 'getIndex'])->name('login');
 Route::post('/login', [LoginController::class, 'postIndex'])->name('login');
 
 Route::get('/', [AttendanceController::class, 'index'])->middleware('auth');
+Route::post('/', [AttendanceController::class, 'index'])->middleware('auth');
 
 Route::get('/attendance',[AttendanceController::class, 'dailyPerformance']);
 

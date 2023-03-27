@@ -27,7 +27,7 @@
             @csrf
             <button class="button2">休憩開始</button>
           </form>
-        @else
+        @elseif(($isRestStarted) || ($isWorkEnded))
           <form action="/restStart" method="POST" class="timestamp">
             @csrf
             <button disabled style="color:gray">休憩開始</button>
@@ -51,7 +51,7 @@
             <button disabled style="color:gray">勤務終了</button>
           </form>
         @endif
-        @if($isWorkStarted)  
+        @if($isRestStarted)  
           <form action="/restEnd" method="POST" class="timestamp">
             @csrf
             <button class="button4">休憩終了</button>
