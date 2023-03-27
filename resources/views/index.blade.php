@@ -11,6 +11,7 @@
     <p class="error">{{ session('message') }}</p>
     <div class="main__attendance">
       <div class="attendance__left">
+        <!-- 勤務開始 -->
         @if($isWorkStarted || $isWorkEnded)
           <form action="/workStart" method="POST" class="timestamp">
             @csrf
@@ -22,12 +23,18 @@
             <button class="button1">勤務開始</button>
           </form>
         @endif
-        @if($isWorkStarted)
+        <!-- 休憩開始 -->
+        @if(($isWorkStarted) && ($isRestStarted))
+          <form action="/restStart" method="POST" class="timestamp">
+            @csrf
+            <button disabled style="color:gray">休憩開始</button>
+          </form>
+        @elseif($isWorkStarted)
           <form action="/restStart" method="POST" class="timestamp">
             @csrf
             <button class="button2">休憩開始</button>
           </form>
-        @elseif(($isRestStarted) || ($isWorkEnded))
+        @elseif($isWorkEnded)
           <form action="/restStart" method="POST" class="timestamp">
             @csrf
             <button disabled style="color:gray">休憩開始</button>
@@ -35,6 +42,7 @@
         @endif
         </div>
       <div class="attendance__right">
+        <!-- 勤務終了 -->
         @if($isWorkStarted)
           <form action="/workEnd" method="POST" class="timestamp">
             @csrf
@@ -51,6 +59,7 @@
             <button disabled style="color:gray">勤務終了</button>
           </form>
         @endif
+        <!-- 休憩終了 -->
         @if($isRestStarted)  
           <form action="/restEnd" method="POST" class="timestamp">
             @csrf
