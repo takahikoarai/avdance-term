@@ -33,8 +33,8 @@ class AttendanceController extends Controller
         $oldDay = '';
         
         if($oldAttendance){
-            $oldAttendanceEndTime = new Carbon($oldAttendance->end_time);
-            $oldDay = $oldAttendanceEndTime->startofDay();
+            $oldAttendanceDay = new Carbon($oldAttendance->date);
+            $oldDay = $oldAttendanceDay->startofDay();
         }
 
         $today = Carbon::today();
@@ -48,7 +48,7 @@ class AttendanceController extends Controller
         $user = Auth::user();
         $oldRest ='';
         $oldDay = '';
-        
+
         if(Attendance::where('user_id', $user->id)->exists()){
             $attendance = Attendance::where('user_id', $user->id)->latest()->first();
 
