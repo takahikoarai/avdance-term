@@ -8,13 +8,17 @@
         <p>{{$user->name}}さんお疲れ様です！</p>
       @endif
     </div>
-    <p class="error">勤務開始フラグ：{{ var_dump($isWorkStarted) }}</p>
-    <p class="error">勤務終了フラグ：{{ var_dump($isWorkEnded) }}</p>
-    <p class="error">休憩開始フラグ：{{ var_dump($isRestStarted) }}</p>
+    @if($isWorkStarted && $isRestStarted)
+      <p class="status">休憩中</p>
+    @elseif($isWorkStarted)
+      <p class="status">勤務中</p>
+    @else
+      <p class="status">退勤済</p>
+    @endif
     <div class="main__attendance">
       <div class="attendance__left">
         <!-- 勤務開始 -->
-        @if($isWorkStarted || $isWorkEnded)
+        @if($isWorkStarted)
           <form action="/workStart" method="POST" class="timestamp">
             @csrf
             <button disabled style="color:gray">勤務開始</button>
@@ -26,7 +30,7 @@
           </form>
         @endif
         <!-- 休憩開始 -->
-        @if(($isWorkStarted && $isRestStarted) || ($isWorkEnded))
+        @if($isWorkStarted && $isRestStarted)
           <form action="/restStart" method="POST" class="timestamp">
             @csrf
             <button disabled style="color:gray">休憩開始</button>

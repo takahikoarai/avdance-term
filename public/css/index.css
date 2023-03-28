@@ -46,11 +46,11 @@ main{
 .main__title{
   font-weight: bold;
   text-align: center;
-  margin-bottom: 30px;
 }
 
-.error{
+.status{
   text-align: center;
+  color: red;
 }
 
 .main__attendance{

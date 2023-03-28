@@ -17,12 +17,14 @@ class AttendanceController extends Controller
         $oldAttendance = Attendance::where('user_id', $user->id)->latest()->first();
         $oldDay = '';
         if($oldAttendance){
-            $oldAttendanceStartTime = new Carbon($oldAttendance->start_time);
-            $oldDay = $oldAttendanceStartTime->startOfday();//Carbonインスタンスを生成することで、starOfdayメソッドが使える
+            $oldAttendanceDay = new Carbon($oldAttendance->date);
+            // $oldAttendanceStartTime = new Carbon($oldAttendance->start_time);
+            // $oldDay = $oldAttendanceStartTime->startOfday();
+            //Carbonインスタンスを生成することで、starOfdayメソッドが使える
         }
         $today = Carbon::today();
 
-        return ($oldDay == $today) && (empty($oldAttendance->end_time));
+        return ($oldAttendanceDay == $today) && ((!$oldAttendance->end_time));
     }
 
     //「勤務終了」判定
@@ -30,16 +32,18 @@ class AttendanceController extends Controller
     {
         $user = Auth::user();
         $oldAttendance = Attendance::where('user_id', $user->id)->latest()->first();
-        $oldDay = '';
+        return (isset($oldAttendance->end_time));
+
+        // $oldDay = '';
         
-        if($oldAttendance){
-            $oldAttendanceDay = new Carbon($oldAttendance->date);
-            $oldDay = $oldAttendanceDay->startofDay();
-        }
+        // if($oldAttendance){
+        //     $oldAttendanceEndTime = new Carbon($oldAttendance->end_time);
+        //     $oldDay = $oldAttendanceEndTime->startOfDay();
+        // }
 
-        $today = Carbon::today();
+        // $today = Carbon::today();
 
-        return ($oldDay == $today);
+        // return ($oldDay == $today);
     }
 
     //「休憩中」判定
@@ -72,10 +76,28 @@ class AttendanceController extends Controller
     {
         //打刻ページを表示
         if(Auth::check()){
+            $user = Auth::user();
+            $oldAttendance = Attendance::where('user_id', $user->id)->latest()->first();
+            $oldDay = new carbon($oldAttendance->date);
+            $today = Carbon::today();
+            if($oldDay == $today->subDay()){
+                if(($oldAttendance->start_time) && (!$oldAttendance->end_time)){
+                    $oldAttendance->update([
+                        'end_time' => '23:59:59',
+                    ]);
+
+                    Attendance::create([
+                        'user_id' => $user->id,
+                        'date' => Carbon::today(),
+                        'start_time' => '0:00:00',
+                    ]);
+                }
+            }
+
             $isWorkStarted = $this->didWorkStart();
             $isWorkEnded = $this->didWorkEnd();
             $isRestStarted = $this->didRestStart();
-            $user = Auth::user();
+
             $param = [
                 'user' => $user,
                 'isWorkStarted' => $isWorkStarted,
@@ -105,12 +127,11 @@ class AttendanceController extends Controller
             'start_time' => Carbon::now(),
         ]);
 
-        $param = [
+        return redirect()->back()->with([
             'user' => $user,
             'isWorkStarted' => $isWorkStarted,
             'isWorkEnded' => $isWorkEnded,
-        ];
-        return view('/index', $param);
+        ]);
     }
 
     //退勤アクション
