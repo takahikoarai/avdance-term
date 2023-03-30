@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Attendance;
 use App\Models\Rest;
 use Carbon\Carbon;
+use App\Models\User;
 
 class AttendanceController extends Controller
 {
@@ -18,9 +19,6 @@ class AttendanceController extends Controller
         $oldDay = '';
         if($oldAttendance){
             $oldAttendanceDay = new Carbon($oldAttendance->date);
-            // $oldAttendanceStartTime = new Carbon($oldAttendance->start_time);
-            // $oldDay = $oldAttendanceStartTime->startOfday();
-            //Carbonインスタンスを生成することで、starOfdayメソッドが使える
         }
         $today = Carbon::today();
 
@@ -33,17 +31,6 @@ class AttendanceController extends Controller
         $user = Auth::user();
         $oldAttendance = Attendance::where('user_id', $user->id)->latest()->first();
         return (isset($oldAttendance->end_time));
-
-        // $oldDay = '';
-        
-        // if($oldAttendance){
-        //     $oldAttendanceEndTime = new Carbon($oldAttendance->end_time);
-        //     $oldDay = $oldAttendanceEndTime->startOfDay();
-        // }
-
-        // $today = Carbon::today();
-
-        // return ($oldDay == $today);
     }
 
     //「休憩中」判定
@@ -70,6 +57,12 @@ class AttendanceController extends Controller
             //restsテーブルの最新のレコードが今日のデータ、かつ休憩終了がない（レコードがあるということは勤務開始＆休憩開始されている）
             return ($oldDay == $today) && (!$oldRest->end_time);
         }
+    }
+
+    //勤務時間-休憩時間の計算
+    private function actualWorkTime()
+    {
+
     }
 
     public function index()
@@ -206,24 +199,74 @@ class AttendanceController extends Controller
         ]);
     }
 
-    public function dailyPerformance()
+    public function dailyPerformanceToday()
     {
-        //「日付一覧」クリックで日付別勤怠ページを表示、日別で勤怠一覧を取得
-        // $user = Auth::user();
-        //認証すると全ユーザー情報を取得できないのでは？
-        $allAttendance = Attendance::all();
-        $allRest = Rest::where('attendance_id', $allAttendance->id);
+        // $user = User::where('name')->latest()->first();
+        $today = Carbon::today();
 
-        //まず日付で検索をかける
+        //休憩時間と勤務時間を算出する計算
+        $attendanceToday = Attendance::where('date', $today)->latest()->first();
+
+        $attendanceStartTime = new Carbon($attendanceToday->start_time);
+        $attendanceEndTime = new Carbon($attendanceToday->end_time);
+        $workTimeInt = $attendanceEndTime->diffInSeconds($attendanceStartTime);//int(15)
         
 
-        $today = Carbon::today();
-        $dailyAttendance = Attendance::where('date');
+        //勤務時間
+        $attendanceStartTime = $attendanceToday->start_time;//string(8) "00:16:24"
+        $attendanceStartTime = strtotime($attendanceStartTime);//int(1680189384)
+        $attendanceEndTime = $attendanceToday->end_time;//string(8) "00:16:39"
+        $attendanceEndTime = strtotime($attendanceEndTime);//int(1680189399)
+        $workTime = $attendanceEndTime - $attendanceStartTime;//int(15)
 
-        //休憩時間
+
+        // $param = [
+        //     'AttendanceToday' => $AttendanceToday,
+        //     'workTime' => $workTime,
+        // ];
+
+        return view('attendance')->with([
+            'attendanceToday' => $attendanceToday,
+            'workTime' => $workTime,
+        ]);
+
+        // $dailyRestToday = Rest::where('attendance_id', $dailyAttendanceToday->id);
+        
+
+
+
+        //attendanceレコードを持つユーザーを取得
+        // $dailyPerformance = User::has('attendances')
+        //     //そのうち日付が今日のレコード
+        //     ->join('attendances', 'attendances.date', '=', $today)
+        //     ->join('rests', 'rests.attendance_id', '=', 'attendances.id')
+        //     ->orderBy('user.id', 'desc')
+        //     ->get();
+        // var_dump($dailyPerformance);
+
+
+
+        // //今日の勤怠記録を取得
+        // $dailyAttendanceToday = Attendance::where('date', $today);
+        // //今日の
+        // $dailyRestToday = Rest::where('attendance_id', $allAttendance->id);
+
+        
+        
+        //休憩時間の計算
 
         //必要な情報はname(users),start_time(attendances),end_time(attendances),start_time(rests),end_time(rests)
         //viewにわたす情報は、
+
+    }
+
+    public function dailyPerformanceSubDay()
+    {
+
+    }
+
+    public function dailyPerformanceAddDay()
+    {
         
     }
 

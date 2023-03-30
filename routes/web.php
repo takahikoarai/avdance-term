@@ -32,9 +32,9 @@ Route::post('/login', [LoginController::class, 'postIndex'])->name('login');
 Route::get('/', [AttendanceController::class, 'index'])->middleware('auth');
 Route::post('/', [AttendanceController::class, 'index'])->middleware('auth');
 
-Route::get('/attendance',[AttendanceController::class, 'dailyPerformance']);
-
 Route::post('/workStart', [AttendanceController::class, 'workStart']);
 Route::post('/workEnd', [AttendanceController::class, 'workEnd']);
 Route::post('/restStart', [AttendanceController::class, 'restStart']);
 Route::post('/restEnd', [AttendanceController::class, 'restEnd']);
+
+Route::get('/dailyPerformanceToday',[AttendanceController::class, 'dailyPerformanceToday']);
