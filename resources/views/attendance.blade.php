@@ -7,5 +7,6 @@
   <p>日付{{ $attendanceToday->date }}</p>
   <p>勤務開始{{ $attendanceToday->start_time }}</p>
   <p>勤務終了{{ $attendanceToday->end_time }}</p>
-  <p>勤務時間（秒）{{ $workTime }}</p>
+  <p>休憩時間{{ $restTime }}</p>
+  <p>勤務時間{{ $actualWorkTime }}</p>
 @endsection

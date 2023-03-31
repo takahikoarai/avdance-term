@@ -204,21 +204,42 @@ class AttendanceController extends Controller
         // $user = User::where('name')->latest()->first();
         $today = Carbon::today();
 
-        //休憩時間と勤務時間を算出する計算
+        //勤務時間の算出
         $attendanceToday = Attendance::where('date', $today)->latest()->first();
-
         $attendanceStartTime = new Carbon($attendanceToday->start_time);
         $attendanceEndTime = new Carbon($attendanceToday->end_time);
-        $workTimeInt = $attendanceEndTime->diffInSeconds($attendanceStartTime);//int(15)
+        $workTimeDiffInSeconds = $attendanceEndTime->diffInSeconds($attendanceStartTime);
+        $workTimeSeconds = floor($workTimeDiffInSeconds % 60);
+        $workTimeMinutes = floor($workTimeDiffInSeconds / 60);
+        $workTimeHours = floor($workTimeMinutes / 60);
+        $workTime = $workTimeHours.":".$workTimeMinutes.":".$workTimeSeconds;
+
+        //休憩時間の算出
+        $restToday = Rest::where('attendance_id', $attendanceToday->id)->latest()->first();
+        $restStartTime = new Carbon($restToday->start_time);
+        $restEndTime = new Carbon($restToday->end_time);
+        $restTimeDiffInSeconds = $restEndTime->diffInSeconds($restStartTime);
+        $restTimeSeconds = floor($restTimeDiffInSeconds % 60);
+        $restTimeMinutes = floor($restTimeDiffInSeconds / 60);
+        $restTimeHours = floor($restTimeMinutes / 60);
+        $restTime = $restTimeHours.":".$restTimeMinutes.":".$restTimeSeconds;
+
+        //実労働時間の算出
+        $actualWorkTimeDiffInSeconds = $workTimeDiffInSeconds - $restTimeDiffInSeconds;
+        $actualWorkTimeSeconds = floor($actualWorkTimeDiffInSeconds % 60);
+        $actualWorkTimeMinutes = floor($actualWorkTimeDiffInSeconds / 60);
+        $actualTimeHours = floor($actualWorkTimeMinutes / 60);
+        $actualWorkTime = $actualTimeHours.":".$actualWorkTimeMinutes.":".$actualWorkTimeSeconds;
         
 
         //勤務時間
-        $attendanceStartTime = $attendanceToday->start_time;//string(8) "00:16:24"
-        $attendanceStartTime = strtotime($attendanceStartTime);//int(1680189384)
-        $attendanceEndTime = $attendanceToday->end_time;//string(8) "00:16:39"
-        $attendanceEndTime = strtotime($attendanceEndTime);//int(1680189399)
-        $workTime = $attendanceEndTime - $attendanceStartTime;//int(15)
+        // $attendanceStartTime = $attendanceToday->start_time;//string(8) "00:16:24"
+        // $attendanceStartTime = strtotime($attendanceStartTime);//int(1680189384)
+        // $attendanceEndTime = $attendanceToday->end_time;//string(8) "00:16:39"
+        // $attendanceEndTime = strtotime($attendanceEndTime);//int(1680189399)
+        // $workTime = $attendanceEndTime - $attendanceStartTime;//int(15)
 
+        // それから、表示形式ですが、もともと文字型だったものを日付時刻型のCarbonに変換していることを思い出してください。秒から時間、分を計算すれば、あとは文字で合成するだけですね。
 
         // $param = [
         //     'AttendanceToday' => $AttendanceToday,
@@ -227,7 +248,8 @@ class AttendanceController extends Controller
 
         return view('attendance')->with([
             'attendanceToday' => $attendanceToday,
-            'workTime' => $workTime,
+            'restTime' => $restTime,
+            'actualWorkTime' => $actualWorkTime,
         ]);
 
         // $dailyRestToday = Rest::where('attendance_id', $dailyAttendanceToday->id);
