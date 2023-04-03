@@ -1,4 +1,7 @@
 @extends('layouts.default')
+<head>
+  <link rel="stylesheet" href="css/index.css">
+</head>
 
 @section('title', '打刻ページ')
 @section('content')
@@ -18,7 +21,7 @@
     <div class="main__attendance">
       <div class="attendance__left">
         <!-- 勤務開始 -->
-        @if($isWorkStarted)
+        @if(($isWorkStarted) || ($isWorkEnded))
           <form action="/workStart" method="POST" class="timestamp">
             @csrf
             <button disabled style="color:gray">勤務開始</button>
@@ -66,7 +69,7 @@
           </form>
         @endif
         <!-- 休憩終了 -->
-        @if($isRestStarted)  
+        @if(($isWorkStarted) && ($isRestStarted))
           <form action="/restEnd" method="POST" class="timestamp">
             @csrf
             <button class="button4">休憩終了</button>

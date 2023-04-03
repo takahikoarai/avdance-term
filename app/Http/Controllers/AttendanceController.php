@@ -30,7 +30,15 @@ class AttendanceController extends Controller
     {
         $user = Auth::user();
         $oldAttendance = Attendance::where('user_id', $user->id)->latest()->first();
-        return (isset($oldAttendance->end_time));
+        $oldDay = '';
+        
+        if($oldAttendance){
+            $oldDay = new Carbon($oldAttendance->date);
+        }
+
+        $today = Carbon::today();
+
+        return ($oldDay == $today);
     }
 
     //「休憩中」判定
@@ -60,9 +68,47 @@ class AttendanceController extends Controller
     }
 
     //勤務時間-休憩時間の計算
-    private function actualWorkTime()
+    private function actualWorkTime($attendanceToday, $restToday)
     {
+        //勤務時間の算出
+        $attendanceStartTime = $attendanceToday->start_time;
+        $attendanceStartTimeCarbon = new Carbon($attendanceToday->start_time);
+        $attendanceEndTime = $attendanceToday->end_time;
+        $attendanceEndTimeCarbon = new Carbon($attendanceToday->end_time);
+        $workTimeDiffInSeconds = $attendanceEndTimeCarbon->diffInSeconds($attendanceStartTimeCarbon);
+        $workTimeSeconds = floor($workTimeDiffInSeconds % 60);
+        $workTimeMinutes = floor($workTimeDiffInSeconds / 60);
+        $workTimeHours = floor($workTimeMinutes / 60);
+        $workTime = $workTimeHours.":".$workTimeMinutes.":".$workTimeSeconds;
 
+        //休憩時間の算出
+        $restStartTime = new Carbon($restToday->start_time);
+        $restEndTime = new Carbon($restToday->end_time);
+        $restTimeDiffInSeconds = $restEndTime->diffInSeconds($restStartTime);
+        $restTimeSeconds = floor($restTimeDiffInSeconds % 60);
+        $restTimeMinutes = floor($restTimeDiffInSeconds / 60);
+        $restTimeHours = floor($restTimeMinutes / 60);
+        $restTime = $restTimeHours.":".$restTimeMinutes.":".$restTimeSeconds;
+
+        //実労働時間の算出
+        $actualWorkTimeDiffInSeconds = $workTimeDiffInSeconds - $restTimeDiffInSeconds;
+        $actualWorkTimeSeconds = floor($actualWorkTimeDiffInSeconds % 60);
+        $actualWorkTimeMinutes = floor($actualWorkTimeDiffInSeconds / 60);
+        $actualTimeHours = floor($actualWorkTimeMinutes / 60);
+        $actualWorkTime = $actualTimeHours.":".$actualWorkTimeMinutes.":".$actualWorkTimeSeconds;
+        
+        $userId = User::where('id', $attendanceToday->user_id)->first();
+        $userName = $userId->name;
+
+        $param = [
+            'userName' => $userName,
+            'attendanceStartTime' => $attendanceStartTime,
+            'attendanceEndTime' =>$attendanceEndTime,
+            'restTime' => $restTime,
+            'actualWorkTime' => $actualWorkTime,
+        ];
+
+        return $param;
     }
 
     public function index()
@@ -184,8 +230,6 @@ class AttendanceController extends Controller
 
         $isRestStarted = $this->didRestStart();
 
-        //休憩終了を連続で押せない制御は？
-
         //end_timeが存在しない場合は、end_timeを格納
         if($oldRest->start_time && !$oldRest->end_time){
             $oldRest->update([
@@ -201,84 +245,23 @@ class AttendanceController extends Controller
 
     public function dailyPerformanceToday()
     {
-        // $user = User::where('name')->latest()->first();
         $today = Carbon::today();
+        $resultArray[] = array();
 
-        //勤務時間の算出
-        $attendanceToday = Attendance::where('date', $today)->latest()->first();
-        $attendanceStartTime = new Carbon($attendanceToday->start_time);
-        $attendanceEndTime = new Carbon($attendanceToday->end_time);
-        $workTimeDiffInSeconds = $attendanceEndTime->diffInSeconds($attendanceStartTime);
-        $workTimeSeconds = floor($workTimeDiffInSeconds % 60);
-        $workTimeMinutes = floor($workTimeDiffInSeconds / 60);
-        $workTimeHours = floor($workTimeMinutes / 60);
-        $workTime = $workTimeHours.":".$workTimeMinutes.":".$workTimeSeconds;
+        $attendanceTodayAll = Attendance::where('date', $today)->get();
+        foreach($attendanceTodayAll as $attendanceToday){
 
-        //休憩時間の算出
-        $restToday = Rest::where('attendance_id', $attendanceToday->id)->latest()->first();
-        $restStartTime = new Carbon($restToday->start_time);
-        $restEndTime = new Carbon($restToday->end_time);
-        $restTimeDiffInSeconds = $restEndTime->diffInSeconds($restStartTime);
-        $restTimeSeconds = floor($restTimeDiffInSeconds % 60);
-        $restTimeMinutes = floor($restTimeDiffInSeconds / 60);
-        $restTimeHours = floor($restTimeMinutes / 60);
-        $restTime = $restTimeHours.":".$restTimeMinutes.":".$restTimeSeconds;
+            $restTodayAll = Rest::where('attendance_id', $attendanceToday->id)->get();
 
-        //実労働時間の算出
-        $actualWorkTimeDiffInSeconds = $workTimeDiffInSeconds - $restTimeDiffInSeconds;
-        $actualWorkTimeSeconds = floor($actualWorkTimeDiffInSeconds % 60);
-        $actualWorkTimeMinutes = floor($actualWorkTimeDiffInSeconds / 60);
-        $actualTimeHours = floor($actualWorkTimeMinutes / 60);
-        $actualWorkTime = $actualTimeHours.":".$actualWorkTimeMinutes.":".$actualWorkTimeSeconds;
-        
+            foreach($restTodayAll as $restToday){
+                $result = $this->actualWorkTime($attendanceToday, $restToday);//ユーザー名、勤務開始時間、勤務終了時間、休憩時間$paramを受け取った
+                array_push($resultArray, $result);
+            }
+        }
 
-        //勤務時間
-        // $attendanceStartTime = $attendanceToday->start_time;//string(8) "00:16:24"
-        // $attendanceStartTime = strtotime($attendanceStartTime);//int(1680189384)
-        // $attendanceEndTime = $attendanceToday->end_time;//string(8) "00:16:39"
-        // $attendanceEndTime = strtotime($attendanceEndTime);//int(1680189399)
-        // $workTime = $attendanceEndTime - $attendanceStartTime;//int(15)
-
-        // それから、表示形式ですが、もともと文字型だったものを日付時刻型のCarbonに変換していることを思い出してください。秒から時間、分を計算すれば、あとは文字で合成するだけですね。
-
-        // $param = [
-        //     'AttendanceToday' => $AttendanceToday,
-        //     'workTime' => $workTime,
-        // ];
-
-        return view('attendance')->with([
-            'attendanceToday' => $attendanceToday,
-            'restTime' => $restTime,
-            'actualWorkTime' => $actualWorkTime,
+        return view('/attendance')->with([
+            'resultArray' => $resultArray,
         ]);
-
-        // $dailyRestToday = Rest::where('attendance_id', $dailyAttendanceToday->id);
-        
-
-
-
-        //attendanceレコードを持つユーザーを取得
-        // $dailyPerformance = User::has('attendances')
-        //     //そのうち日付が今日のレコード
-        //     ->join('attendances', 'attendances.date', '=', $today)
-        //     ->join('rests', 'rests.attendance_id', '=', 'attendances.id')
-        //     ->orderBy('user.id', 'desc')
-        //     ->get();
-        // var_dump($dailyPerformance);
-
-
-
-        // //今日の勤怠記録を取得
-        // $dailyAttendanceToday = Attendance::where('date', $today);
-        // //今日の
-        // $dailyRestToday = Rest::where('attendance_id', $allAttendance->id);
-
-        
-        
-        //休憩時間の計算
-
-        //必要な情報はname(users),start_time(attendances),end_time(attendances),start_time(rests),end_time(rests)
-        //viewにわたす情報は、
 
     }
 
