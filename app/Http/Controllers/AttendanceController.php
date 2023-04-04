@@ -8,6 +8,9 @@ use App\Models\Attendance;
 use App\Models\Rest;
 use Carbon\Carbon;
 use App\Models\User;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Collection;
 
 class AttendanceController extends Controller
 {
@@ -278,10 +281,20 @@ class AttendanceController extends Controller
             }     
         }
 
+        $attendances = $this->paginate($resultArray, 5, null, ['path'=>'/attendance']);
+
         return view('/attendance')->with([
-            'resultArray' => $resultArray,
+            'attendances' => $attendances,
+            // 'resultArray' => $resultArray,
         ]);
 
+    }
+
+    private function paginate($items, $perPage, $page, $options = [])
+    {
+        $page = $page ?: (Paginator::resolveCurrentPage() ?: 1);
+        $items = $items instanceof Collection ? $items : Collection::make($items);
+        return new LengthAwarePaginator($items->forPage($page, $perPage), $items->count(), $perPage, $page, $options);
     }
 
     public function dailyPerformanceSubDay()

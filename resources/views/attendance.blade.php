@@ -17,8 +17,7 @@
           <th>休憩時間</th>
           <th>勤務時間</th>
         </tr>
-        @foreach($resultArray as $values)
-        <!-- $valueには配列が格納されている、と思う -->
+        @foreach($attendances as $values)
         <tr>
           @foreach($values as $sub_value)
             <td>{{ $sub_value }}</td>
@@ -27,6 +26,8 @@
         @endforeach
       </table>
     </div>
-    <div class="pagenate"></div>
+    <div class="paginate">
+      {{ $attendances->links() }}
+    </div>
   </main>
 @endsection
