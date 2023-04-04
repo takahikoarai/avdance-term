@@ -19,10 +19,12 @@ class AttendanceController extends Controller
         $oldDay = '';
         if($oldAttendance){
             $oldAttendanceDay = new Carbon($oldAttendance->date);
-        }
-        $today = Carbon::today();
+            $today = Carbon::today();
 
-        return ($oldAttendanceDay == $today) && ((!$oldAttendance->end_time));
+            return ($oldAttendanceDay == $today) && ((!$oldAttendance->end_time));
+        }else{
+            return false;
+        }
     }
 
     //「勤務終了」判定
@@ -123,25 +125,30 @@ class AttendanceController extends Controller
         if(Auth::check()){
             $user = Auth::user();
             $oldAttendance = Attendance::where('user_id', $user->id)->latest()->first();
-            $oldDay = new carbon($oldAttendance->date);
-            $today = Carbon::today();
-            if($oldDay == $today->subDay()){
-                if(($oldAttendance->start_time) && (!$oldAttendance->end_time)){
-                    $oldAttendance->update([
-                        'end_time' => '23:59:59',
-                    ]);
+            if($oldAttendance){
+                $oldDay = new carbon($oldAttendance->date);
+                $today = Carbon::today();
+                if($oldDay == $today->subDay()){
+                    if(($oldAttendance->start_time) && (!$oldAttendance->end_time)){
+                        $oldAttendance->update([
+                            'end_time' => '23:59:59',
+                        ]);
 
-                    Attendance::create([
-                        'user_id' => $user->id,
-                        'date' => Carbon::today(),
-                        'start_time' => '0:00:00',
-                    ]);
+                        Attendance::create([
+                            'user_id' => $user->id,
+                            'date' => Carbon::today(),
+                            'start_time' => '0:00:00',
+                        ]);
+                    }
                 }
+                $isWorkStarted = $this->didWorkStart();
+                $isWorkEnded = $this->didWorkEnd();
+                $isRestStarted = $this->didRestStart();
+            }else{
+                $isWorkStarted = false;
+                $isWorkEnded = false;
+                $isRestStarted = false;
             }
-
-            $isWorkStarted = $this->didWorkStart();
-            $isWorkEnded = $this->didWorkEnd();
-            $isRestStarted = $this->didRestStart();
 
             $param = [
                 'user' => $user,
@@ -263,7 +270,6 @@ class AttendanceController extends Controller
 
                 foreach($restTodayAll as $restToday){
                     $restTime = $this->calcurateRestTime($restToday);
-                    var_dump($restTime);
                     $restTimeDiffInSecondsTotal += $restTime;
                 }
 
