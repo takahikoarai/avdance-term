@@ -68,7 +68,7 @@ class AttendanceController extends Controller
     }
 
     //勤務時間-休憩時間の計算
-    private function actualWorkTime($attendanceToday, $restToday)
+    private function actualWorkTime($attendanceToday, $restTimeDiffInSecondsTotal)
     {
         //勤務時間の算出
         $attendanceStartTime = $attendanceToday->start_time;
@@ -81,17 +81,14 @@ class AttendanceController extends Controller
         $workTimeHours = floor($workTimeMinutes / 60);
         $workTime = $workTimeHours.":".$workTimeMinutes.":".$workTimeSeconds;
 
-        //休憩時間の算出
-        $restStartTime = new Carbon($restToday->start_time);
-        $restEndTime = new Carbon($restToday->end_time);
-        $restTimeDiffInSeconds = $restEndTime->diffInSeconds($restStartTime);
-        $restTimeSeconds = floor($restTimeDiffInSeconds % 60);
-        $restTimeMinutes = floor($restTimeDiffInSeconds / 60);
+        //合算された休憩時間を整形する
+        $restTimeSeconds = floor($restTimeDiffInSecondsTotal % 60);
+        $restTimeMinutes = floor($restTimeDiffInSecondsTotal / 60);
         $restTimeHours = floor($restTimeMinutes / 60);
         $restTime = $restTimeHours.":".$restTimeMinutes.":".$restTimeSeconds;
 
         //実労働時間の算出
-        $actualWorkTimeDiffInSeconds = $workTimeDiffInSeconds - $restTimeDiffInSeconds;
+        $actualWorkTimeDiffInSeconds = $workTimeDiffInSeconds - $restTimeDiffInSecondsTotal;
         $actualWorkTimeSeconds = floor($actualWorkTimeDiffInSeconds % 60);
         $actualWorkTimeMinutes = floor($actualWorkTimeDiffInSeconds / 60);
         $actualTimeHours = floor($actualWorkTimeMinutes / 60);
@@ -107,8 +104,17 @@ class AttendanceController extends Controller
             'restTime' => $restTime,
             'actualWorkTime' => $actualWorkTime,
         ];
-
         return $param;
+    }
+
+    private function calcurateRestTime($restToday)
+    {
+        //一つ一つの休憩について休憩時間を計算
+        $restStartTime = new Carbon($restToday->start_time);
+        $restEndTime = new Carbon($restToday->end_time);
+        $restTimeDiffInSeconds = $restEndTime->diffInSeconds($restStartTime);
+        return $restTimeDiffInSeconds;
+        var_dump($restTimeDiffInSeconds);
     }
 
     public function index()
@@ -250,13 +256,20 @@ class AttendanceController extends Controller
 
         $attendanceTodayAll = Attendance::where('date', $today)->get();
         foreach($attendanceTodayAll as $attendanceToday){
+            if($attendanceToday->end_time){
+                $restTodayAll = Rest::where('attendance_id', $attendanceToday->id)->get();
 
-            $restTodayAll = Rest::where('attendance_id', $attendanceToday->id)->get();
+                $restTimeDiffInSecondsTotal = 0;
 
-            foreach($restTodayAll as $restToday){
-                $result = $this->actualWorkTime($attendanceToday, $restToday);//ユーザー名、勤務開始時間、勤務終了時間、休憩時間$paramを受け取った
+                foreach($restTodayAll as $restToday){
+                    $restTime = $this->calcurateRestTime($restToday);
+                    var_dump($restTime);
+                    $restTimeDiffInSecondsTotal += $restTime;
+                }
+
+                $result = $this->actualWorkTime($attendanceToday, $restTimeDiffInSecondsTotal);
                 array_push($resultArray, $result);
-            }
+            }     
         }
 
         return view('/attendance')->with([
