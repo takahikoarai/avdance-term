@@ -112,19 +112,18 @@ class AttendanceController extends Controller
         return $param;
     }
 
-    private function calcurateRestTime($restToday)
+    //一つ一つの休憩について休憩時間を計算
+    private function calculateRestTime($restToday)
     {
-        //一つ一つの休憩について休憩時間を計算
         $restStartTime = new Carbon($restToday->start_time);
         $restEndTime = new Carbon($restToday->end_time);
         $restTimeDiffInSeconds = $restEndTime->diffInSeconds($restStartTime);
         return $restTimeDiffInSeconds;
-        var_dump($restTimeDiffInSeconds);
     }
 
+    //打刻ページを表示
     public function index()
     {
-        //打刻ページを表示
         if(Auth::check()){
             $user = Auth::user();
             $oldAttendance = Attendance::where('user_id', $user->id)->latest()->first();
@@ -259,9 +258,9 @@ class AttendanceController extends Controller
         ]);
     }
 
-    public function dailyPerformanceToday()
+    public function performanceToday()
     {
-        $today = Carbon::today();
+        $today = date("Y-m-d");
         $resultArray[] = array();
 
         $attendanceTodayAll = Attendance::where('date', $today)->get();
@@ -272,7 +271,7 @@ class AttendanceController extends Controller
                 $restTimeDiffInSecondsTotal = 0;
 
                 foreach($restTodayAll as $restToday){
-                    $restTime = $this->calcurateRestTime($restToday);
+                    $restTime = $this->calculateRestTime($restToday);
                     $restTimeDiffInSecondsTotal += $restTime;
                 }
 
@@ -284,12 +283,13 @@ class AttendanceController extends Controller
         $attendances = $this->paginate($resultArray, 5, null, ['path'=>'/attendance']);
 
         return view('/attendance')->with([
+            'today' => $today,
             'attendances' => $attendances,
-            // 'resultArray' => $resultArray,
         ]);
 
     }
 
+    //配列をページネート
     private function paginate($items, $perPage, $page, $options = [])
     {
         $page = $page ?: (Paginator::resolveCurrentPage() ?: 1);
@@ -297,12 +297,12 @@ class AttendanceController extends Controller
         return new LengthAwarePaginator($items->forPage($page, $perPage), $items->count(), $perPage, $page, $options);
     }
 
-    public function dailyPerformanceSubDay()
+    public function performanceSubDay()
     {
 
     }
 
-    public function dailyPerformanceAddDay()
+    public function performanceAddDay()
     {
         
     }

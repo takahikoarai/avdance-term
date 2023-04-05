@@ -7,7 +7,9 @@
 @section('content')
   <p>ここはattendnace.blade.phpです</p>
   <main>
-    <div class="date"></div>
+    <div class="date">
+      <p>{{ $today }}</p>
+    </div>
     <div class="result">
       <table>
         <tr>
