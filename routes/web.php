@@ -38,3 +38,8 @@ Route::post('/restStart', [AttendanceController::class, 'restStart']);
 Route::post('/restEnd', [AttendanceController::class, 'restEnd']);
 
 Route::get('/attendance',[AttendanceController::class, 'performanceToday']);
+Route::post('/attendance',[AttendanceController::class, 'performanceToday']);
+
+Route::post('/attendance/subDay', [AttendanceController::class, 'performanceSubDay']);
+
+Route::post('/attendance/addDay', [AttendanceController::class, 'performanceAddDay']);

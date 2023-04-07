@@ -27,7 +27,8 @@
   font-size: 15px;
 }
 
-.nav__logout {
+.nav__logout,
+.nav__attendance {
   background-color: transparent;
   border: none;
   cursor: pointer;

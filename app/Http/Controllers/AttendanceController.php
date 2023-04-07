@@ -11,6 +11,7 @@ use App\Models\User;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Collection;
+use DateTime;
 
 class AttendanceController extends Controller
 {
@@ -258,9 +259,24 @@ class AttendanceController extends Controller
         ]);
     }
 
-    public function performanceToday()
+    public function performanceToday(Request $request)
     {
-        $today = date("Y-m-d");
+        $today = $request->getToday;
+        var_dump($today);
+        $prevOrNext = $request->changeDay;
+
+        if($prevOrNext === "prev"){
+            $timestamp = strtotime('-1 day');
+            $yesterdayTimestamp = strtotime($today, $timestamp);
+            $today = date('Y-m-d', $yesterdayTimestamp);
+            var_dump($today);
+        }elseif($prevOrNext === "next"){
+            $timestamp = strtotime('+1 day');
+            $tomorrowTimestamp = strtotime($today, $timestamp);
+            $today = date('Y-m-d', $tomorrowTimestamp);
+            var_dump($today);
+        }
+        
         $resultArray[] = array();
 
         $attendanceTodayAll = Attendance::where('date', $today)->get();
@@ -297,14 +313,66 @@ class AttendanceController extends Controller
         return new LengthAwarePaginator($items->forPage($page, $perPage), $items->count(), $perPage, $page, $options);
     }
 
-    public function performanceSubDay()
-    {
+    // public function performanceSubDay(Request $request)
+    // {
+    //     $request = date('Y-m-d', strtotime('-1 day'));
+    //     $today = $request;
+    //     $resultArray[] = array();
 
-    }
+    //     $attendanceTodayAll = Attendance::where('date', $today)->get();
+    //     foreach($attendanceTodayAll as $attendanceToday){
+    //         if($attendanceToday->end_time){
+    //             $restTodayAll = Rest::where('attendance_id', $attendanceToday->id)->get();
 
-    public function performanceAddDay()
-    {
-        
-    }
+    //             $restTimeDiffInSecondsTotal = 0;
+
+    //             foreach($restTodayAll as $restToday){
+    //                 $restTime = $this->calculateRestTime($restToday);
+    //                 $restTimeDiffInSecondsTotal += $restTime;
+    //             }
+
+    //             $result = $this->actualWorkTime($attendanceToday, $restTimeDiffInSecondsTotal);
+    //             array_push($resultArray, $result);
+    //         }     
+    //     }
+
+    //     $attendances = $this->paginate($resultArray, 5, null, ['path'=>'/attendance']);
+
+    //     return view('/attendance')->with([
+    //         'today' => $today,
+    //         'attendances' => $attendances,
+    //     ]);
+    // }
+
+    // public function performanceAddDay(Request $request)
+    // {
+    //     $request = date('Y-m-d', strtotime('+1 day'));
+    //     $today = $request;
+    //     $resultArray[] = array();
+
+    //     $attendanceTodayAll = Attendance::where('date', $today)->get();
+    //     foreach($attendanceTodayAll as $attendanceToday){
+    //         if($attendanceToday->end_time){
+    //             $restTodayAll = Rest::where('attendance_id', $attendanceToday->id)->get();
+
+    //             $restTimeDiffInSecondsTotal = 0;
+
+    //             foreach($restTodayAll as $restToday){
+    //                 $restTime = $this->calculateRestTime($restToday);
+    //                 $restTimeDiffInSecondsTotal += $restTime;
+    //             }
+
+    //             $result = $this->actualWorkTime($attendanceToday, $restTimeDiffInSecondsTotal);
+    //             array_push($resultArray, $result);
+    //         }     
+    //     }
+
+    //     $attendances = $this->paginate($resultArray, 5, null, ['path'=>'/attendance']);
+
+    //     return view('/attendance')->with([
+    //         'today' => $today,
+    //         'attendances' => $attendances,
+    //     ]);        
+    // }
 
 }
