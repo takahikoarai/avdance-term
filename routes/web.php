@@ -37,6 +37,5 @@ Route::post('/workEnd', [AttendanceController::class, 'workEnd']);
 Route::post('/restStart', [AttendanceController::class, 'restStart']);
 Route::post('/restEnd', [AttendanceController::class, 'restEnd']);
 
-// Route::get('/attendance',[AttendanceController::class, 'performanceToday']);
 Route::get('/attendance',[AttendanceController::class, 'performanceSomeDay']);
 

@@ -259,14 +259,6 @@ class AttendanceController extends Controller
         ]);
     }
 
-    //配列をページネート
-    private function paginate($items, $perPage, $page, $options = [])
-    {
-        $page = $page ?: (Paginator::resolveCurrentPage() ?: 1);
-        $items = $items instanceof Collection ? $items : Collection::make($items);
-        return new LengthAwarePaginator($items->forPage($page, $perPage), $items->count(), $perPage, $page, $options);
-    }
-
     public function performanceSomeDay(Request $request)
     {
         if(is_null($request->getToday) || ($request->getToday == "today")){
@@ -319,6 +311,14 @@ class AttendanceController extends Controller
             'attendances' => $attendances,
         ]);
 
+    }
+
+        //配列をページネート
+    private function paginate($items, $perPage, $page, $options = [])
+    {
+        $page = $page ?: (Paginator::resolveCurrentPage() ?: 1);
+        $items = $items instanceof Collection ? $items : Collection::make($items);
+        return new LengthAwarePaginator($items->forPage($page, $perPage), $items->count(), $perPage, $page, $options);
     }
 
 }

@@ -9,13 +9,11 @@
   <main>
     <div class="date">
       <form action="/attendance" method="get">
-        @csrf
         <input type="hidden" name="getToday" value="{{ $today }}">
         <button name="changeDay" value="prev">前日</button>
       </form>
       <p>{{ $today }}</p>
       <form action="/attendance" method="get">
-        @csrf
         <input type="hidden" name="getToday" value="{{ $today }}">
         <button name="changeDay" value="next">翌日</button>
       </form>
@@ -39,7 +37,7 @@
       </table>
     </div>
     <div class="paginate">
-      {{ $attendances->links() }}
+        {{ $attendances->links() }}
     </div>
   </main>
 @endsection
