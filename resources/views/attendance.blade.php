@@ -8,12 +8,12 @@
     <div class="date">
       <form action="/attendance" method="get">
         <button name="getToday" id="prev" value="{{ $today }}"><</button>
-        <input type="hidden" name="changeDay" value="prev">
+        <!-- <input type="hidden" name="changeDay" value="prev"> -->
       </form>
       <p class="date__today">{{ $today }}</p>
       <form action="/attendance" method="get">
         <button name="getToday" id="next" value="{{ $today }}">></button>
-        <input type="hidden" name="changeDay" value="next">
+        <!-- <input type="hidden" name="changeDay" value="next"> -->
       </form>
     </div>
     <div class="result">

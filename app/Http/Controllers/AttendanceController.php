@@ -267,7 +267,7 @@ class AttendanceController extends Controller
             $today = $request->getToday;
         }
 
-        $prevOrNext = $request->changeDay;
+        // $prevOrNext = $request->changeDay;
         
         $resultArray[] = array();
         $i = 0;
@@ -290,7 +290,8 @@ class AttendanceController extends Controller
             }
         }
 
-        $attendances = $this->paginate($resultArray, 5, null, ['path'=>"/attendance?getToday={$today}&changeDay={$prevOrNext}"]);
+        $attendances = $this->paginate($resultArray, 5, null, ['path'=>"/attendance?getToday={$today}"]);
+        // &changeDay={$prevOrNext}
 
         return view('/attendance')->with([
             'today' => $today,
