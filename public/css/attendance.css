@@ -3,3 +3,32 @@ svg.w-5.h-5 {
   width: 30px;
   height: 30px;
 }
+
+.main__inner{
+  width: 90%;
+  margin: 0 auto;
+  text-align: center;
+  padding: 30px 0;
+}
+
+.date{
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.date__today{
+  margin: 0 20px;
+}
+
+.result__table{
+  table-layout: fixed;
+  width: 100%;
+  text-align: center;
+  border-top: 1px solid #000;
+}
+
+.table__value{
+  border-top: 1px solid #000;
+  padding: 10px 0;
+}

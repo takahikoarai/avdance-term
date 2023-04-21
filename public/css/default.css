@@ -38,6 +38,10 @@
   font-size: 15px;
 }
 
+main{
+  background-color: #D3D3D3;
+}
+
 /* フッター */
 footer {
   padding-top: 10px;

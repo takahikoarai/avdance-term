@@ -34,7 +34,11 @@
       @endif
     </div>
   </header>
-  @yield('content')
+  <main>
+    <div class="main__inner">
+      @yield('content')
+    </div>
+  </main>
   <footer>
     <small>Atte, Inc.</small>
   </footer>
