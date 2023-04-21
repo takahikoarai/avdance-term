@@ -263,25 +263,11 @@ class AttendanceController extends Controller
     {
         if(is_null($request->getToday) || ($request->getToday == "today")){
             $today = Carbon::today()->format('Y-m-d');
+        }else{
+            $today = $request->getToday;
         }
 
         $prevOrNext = $request->changeDay;
-
-        if($prevOrNext === "prev"){
-            $dateString = $request->getToday;
-            $year = substr($dateString, 0, 4);
-            $month = substr($dateString, 5, 2);
-            $day = substr($dateString, 8, 2);
-            $dt = Carbon::createFromDate($year, $month, $day);
-            $today = $dt->subDay()->format('Y-m-d');
-        }elseif($prevOrNext === "next"){
-            $dateString = $request->getToday;
-            $year = substr($dateString, 0, 4);
-            $month = substr($dateString, 5, 2);
-            $day = substr($dateString, 8, 2);
-            $dt = Carbon::createFromDate($year, $month, $day);
-            $today = $dt->addDay()->format('Y-m-d');
-        }
         
         $resultArray[] = array();
         $i = 0;
@@ -301,10 +287,10 @@ class AttendanceController extends Controller
                 $result = $this->actualWorkTime($attendanceToday, $restTimeDiffInSecondsTotal);
                 $resultArray[$i] = $result;
                 $i++;
-            }     
+            }
         }
 
-        $attendances = $this->paginate($resultArray, 5, null, ['path'=>'/attendance']);
+        $attendances = $this->paginate($resultArray, 5, null, ['path'=>"/attendance?getToday={$today}&changeDay={$prevOrNext}"]);
 
         return view('/attendance')->with([
             'today' => $today,
@@ -313,7 +299,7 @@ class AttendanceController extends Controller
 
     }
 
-        //配列をページネート
+    //配列をページネート
     private function paginate($items, $perPage, $page, $options = [])
     {
         $page = $page ?: (Paginator::resolveCurrentPage() ?: 1);

@@ -38,5 +38,6 @@
   <footer>
     <small>Atte, Inc.</small>
   </footer>
+  <script src="js/attendance.js"></script>
 </body>
 </html>

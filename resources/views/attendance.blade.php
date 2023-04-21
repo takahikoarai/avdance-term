@@ -5,17 +5,16 @@
 
 @section('title', '日付別勤怠ページ')
 @section('content')
-  <p>ここはattendnace.blade.phpです</p>
   <main>
     <div class="date">
       <form action="/attendance" method="get">
-        <input type="hidden" name="getToday" value="{{ $today }}">
-        <button name="changeDay" value="prev">前日</button>
+        <button name="getToday" id="prev" value="{{ $today }}">前日</button>
+        <input type="hidden" name="changeDay" value="prev">
       </form>
       <p>{{ $today }}</p>
       <form action="/attendance" method="get">
-        <input type="hidden" name="getToday" value="{{ $today }}">
-        <button name="changeDay" value="next">翌日</button>
+        <button name="getToday" id="next" value="{{ $today }}">翌日</button>
+        <input type="hidden" name="changeDay" value="next">
       </form>
     </div>
     <div class="result">
@@ -37,7 +36,10 @@
       </table>
     </div>
     <div class="paginate">
-        {{ $attendances->links() }}
+      <form action="/attendance" method="get">
+        <input type="hidden" name="getToday" value="{{ $today }}">
+          {{ $attendances->links() }}
+        </form>
     </div>
   </main>
 @endsection
