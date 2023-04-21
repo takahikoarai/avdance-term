@@ -5,7 +5,6 @@
 
 @section('title', '打刻ページ')
 @section('content')
-  <main>
     <div class="main__title">
       @if(Auth::check())
         <p>{{$user->name}}さんお疲れ様です！</p>
@@ -82,5 +81,4 @@
         @endif
       </div>
     </div>
-  </main>
 @endsection

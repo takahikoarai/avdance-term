@@ -5,24 +5,20 @@
 
 @section('title', '日付別勤怠ページ')
 @section('content')
-  <p>ここはattendnace.blade.phpです</p>
-  <main>
     <div class="date">
-      <form action="/attendance" method="post">
-        @csrf
-        <input type="hidden" name="getToday" value="{{ $today }}">
-        <button name="changeDay" value="prev">前日</button>
+      <form action="/attendance" method="get">
+        <button name="date" id="prev" value="{{ $today }}"><</button>
+        <!-- <input type="hidden" name="changeDay" value="prev"> -->
       </form>
-      <p>{{ $today }}</p>
-      <form action="/attendance" method="post">
-        @csrf
-        <input type="hidden" name="getToday" value="{{ $today }}">
-        <button name="changeDay" value="next">翌日</button>
+      <p class="date__today">{{ $today }}</p>
+      <form action="/attendance" method="get">
+        <button name="date" id="next" value="{{ $today }}">></button>
+        <!-- <input type="hidden" name="changeDay" value="next"> -->
       </form>
     </div>
     <div class="result">
-      <table>
-        <tr>
+      <table class="result__table">
+        <tr class="table__title">
           <th>名前</th>
           <th>勤務開始</th>
           <th>勤務終了</th>
@@ -30,7 +26,7 @@
           <th>勤務時間</th>
         </tr>
         @foreach($attendances as $values)
-        <tr>
+        <tr class="table__value">
           @foreach($values as $sub_value)
             <td>{{ $sub_value }}</td>
           @endforeach
@@ -39,7 +35,9 @@
       </table>
     </div>
     <div class="paginate">
-      {{ $attendances->links() }}
+      <form action="/attendance" method="get">
+        <input type="hidden" name="date" value="{{ $today }}">
+          {{ $attendances->links() }}
+        </form>
     </div>
-  </main>
 @endsection

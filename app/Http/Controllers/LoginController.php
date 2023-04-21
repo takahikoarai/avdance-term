@@ -27,7 +27,7 @@ class LoginController extends Controller
         } else {
             //ログイン失敗
             $text = 'ログインに失敗しました';
-            return redirect('/login', ['text' => $text]);
+            return redirect()->back()->with(['text' => $text]);
         }
     }
 }
