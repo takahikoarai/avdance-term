@@ -20,7 +20,7 @@
             <li class="nav__item">
               <!-- ここはaタグでよいのでは -->
               <form action="/attendance" method="get">
-                <button class="nav__attendance" name="getToday" value="today">日付一覧</button>
+                <button class="nav__attendance" name="date" value="today">日付一覧</button>
               </form>
             </li>
             <li class="nav__item">

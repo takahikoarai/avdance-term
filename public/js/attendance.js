@@ -1,5 +1,5 @@
 function changeDayPrev() {
-  let getToday = document.getElementsByName('getToday');
+  let getToday = document.getElementsByName('date');
   let date = getToday[1].value;
   let year = Number(date.substr(0, 4));
   let month = Number(date.substr(5, 2));
@@ -11,7 +11,7 @@ function changeDayPrev() {
 }
 
 function changeDayNext() {
-  let getToday = document.getElementsByName('getToday');
+  let getToday = document.getElementsByName('date');
   let date = getToday[1].value;
   let year = Number(date.substr(0, 4));
   let month = Number(date.substr(5, 2));

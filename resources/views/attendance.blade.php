@@ -7,12 +7,12 @@
 @section('content')
     <div class="date">
       <form action="/attendance" method="get">
-        <button name="getToday" id="prev" value="{{ $today }}"><</button>
+        <button name="date" id="prev" value="{{ $today }}"><</button>
         <!-- <input type="hidden" name="changeDay" value="prev"> -->
       </form>
       <p class="date__today">{{ $today }}</p>
       <form action="/attendance" method="get">
-        <button name="getToday" id="next" value="{{ $today }}">></button>
+        <button name="date" id="next" value="{{ $today }}">></button>
         <!-- <input type="hidden" name="changeDay" value="next"> -->
       </form>
     </div>
@@ -36,7 +36,7 @@
     </div>
     <div class="paginate">
       <form action="/attendance" method="get">
-        <input type="hidden" name="getToday" value="{{ $today }}">
+        <input type="hidden" name="date" value="{{ $today }}">
           {{ $attendances->links() }}
         </form>
     </div>

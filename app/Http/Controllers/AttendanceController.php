@@ -261,10 +261,10 @@ class AttendanceController extends Controller
 
     public function performanceSomeDay(Request $request)
     {
-        if(is_null($request->getToday) || ($request->getToday == "today")){
+        if(is_null($request->date) || ($request->date == "today")){
             $today = Carbon::today()->format('Y-m-d');
         }else{
-            $today = $request->getToday;
+            $today = $request->date;
         }
 
         // $prevOrNext = $request->changeDay;
@@ -290,7 +290,7 @@ class AttendanceController extends Controller
             }
         }
 
-        $attendances = $this->paginate($resultArray, 5, null, ['path'=>"/attendance?getToday={$today}"]);
+        $attendances = $this->paginate($resultArray, 5, null, ['path'=>"/attendance?date={$today}"]);
         // &changeDay={$prevOrNext}
 
         return view('/attendance')->with([
