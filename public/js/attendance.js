@@ -22,16 +22,6 @@ function changeDayNext() {
   getToday[2].value = formatToday;
 }
 
-//まとめたいけどうまくいかないので後回し
-// function getDateInNumber() {
-//   let getToday = document.getElementsByName('getToday');
-//   let date = getToday[1].value;
-//   let year = Number(date.substr(0, 4));
-//   let month = Number(date.substr(5, 2));
-//   let day = Number(date.substr(8, 2));  
-//   return [year, month, day];
-// }
-
 function formatDate(dt) {
   var y = dt.getFullYear();
   var m = ('00' + (dt.getMonth() + 1)).slice(-2);

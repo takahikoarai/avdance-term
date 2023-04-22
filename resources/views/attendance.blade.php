@@ -8,12 +8,10 @@
     <div class="date">
       <form action="/attendance" method="get">
         <button name="date" id="prev" value="{{ $today }}"><</button>
-        <!-- <input type="hidden" name="changeDay" value="prev"> -->
       </form>
       <p class="date__today">{{ $today }}</p>
       <form action="/attendance" method="get">
         <button name="date" id="next" value="{{ $today }}">></button>
-        <!-- <input type="hidden" name="changeDay" value="next"> -->
       </form>
     </div>
     <div class="result">
@@ -26,7 +24,7 @@
           <th>勤務時間</th>
         </tr>
         @foreach($attendances as $values)
-        <tr class="table__value">
+        <tr class="table__value" >
           @foreach($values as $sub_value)
             <td>{{ $sub_value }}</td>
           @endforeach
