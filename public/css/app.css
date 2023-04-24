@@ -746,7 +746,7 @@ select {
   height: 2rem;
 }
 .min-h-screen {
-  min-height: 100vh;
+  min-height: 80vh;
 }
 .w-20 {
   width: 5rem;
@@ -905,6 +905,12 @@ select {
   --tw-bg-opacity: 1;
   background-color: rgb(31 41 55 / var(--tw-bg-opacity));
 }
+
+.bg-gray-main{
+  --tw-bg-opacity: 1;
+  background-color: #f1efee / var(--tw-bg-opacity);
+}
+
 .bg-indigo-50 {
   --tw-bg-opacity: 1;
   background-color: rgb(238 242 255 / var(--tw-bg-opacity));

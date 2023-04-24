@@ -1,0 +1,26 @@
+.login__title{
+  font-size: 25px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.button-login{
+  background-color: blue;
+  color: #fff;
+  padding: 8px;
+  border-radius: 5px;
+  font-weight: bold;
+  width: 100%;
+}
+
+.linktoregister{
+  text-align: center;
+  margin-top: 20px;
+  font-size: 13px;
+}
+
+.linktoregister a {
+  color: blue;
+  text-decoration: none;
+}

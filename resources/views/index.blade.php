@@ -15,7 +15,7 @@
     @elseif($isWorkStarted)
       <p class="status">勤務中</p>
     @else
-      <p class="status">退勤済</p>
+      <p class="status">出勤前</p>
     @endif
     <div class="main__attendance">
       <div class="attendance__left">
