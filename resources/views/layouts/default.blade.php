@@ -18,11 +18,11 @@
           <ul>
             <li class="nav__item"><a href="/">ホーム</a></li>
             <li class="nav__item">
-              <!-- ここはaタグでよいのでは -->
               <form action="/attendance" method="get">
                 <button class="nav__attendance" name="date" value="today">日付一覧</button>
               </form>
             </li>
+            <li class="nav__item"><a href="/user-page">ユーザー一覧</a></li>
             <li class="nav__item">
               <form action="{{route('logout')}}" method="post">
                 @csrf

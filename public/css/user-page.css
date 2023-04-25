@@ -1,0 +1,18 @@
+.user-list{
+  display: flex;
+  justify-content: center;
+}
+
+.user-table{
+  width: 50%;
+}
+
+.user__title{
+  text-align: center;
+}
+
+.user__title h1{
+  margin-top: -20px;
+  font-size: 20px;
+  font-weight: bold;
+}

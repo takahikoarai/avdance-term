@@ -39,3 +39,5 @@ Route::post('/restEnd', [AttendanceController::class, 'restEnd']);
 
 Route::get('/attendance',[AttendanceController::class, 'performanceSomeDay']);
 
+Route::get('/user-page', [AttendanceController::class, 'getUserList']);
+

@@ -305,4 +305,23 @@ class AttendanceController extends Controller
         return new LengthAwarePaginator($items->forPage($page, $perPage), $items->count(), $perPage, $page, $options);
     }
 
+    //ユーザー一覧ページ
+    public function getUserList(){
+        $getUsers = User::select('name', 'email')->get();
+        
+        $usersArray[] = array();
+        $i = 0;
+        
+        foreach($getUsers as $user){
+            $usersArray[$i] = $user;
+            $i++;
+        }
+
+        $users = $this->paginate($usersArray, 10, null, ['path'=>"/user-page"]);
+
+        return view('/user-page')->with([
+            'users' => $users
+        ]);
+    }
+
 }
