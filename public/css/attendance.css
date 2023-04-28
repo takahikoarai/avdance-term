@@ -38,6 +38,12 @@ svg.w-5.h-5 {
   line-height: 50px;
 }
 
+.table__value td:not(:nth-child(1)) a{
+  pointer-events: none;
+  text-decoration: none;
+  color: #000;
+}
+
 /* ページネーションのCSS */
 nav div:nth-child(1){
   display: none;

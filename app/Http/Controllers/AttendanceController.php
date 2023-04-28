@@ -324,4 +324,26 @@ class AttendanceController extends Controller
         ]);
     }
 
+    //ユーザー別勤怠一覧の取得
+    public function performanceEachUser(Request $request){
+        $userName = $request->name;
+
+        //$userNameで絞り込みたい
+        $attendanceAll = Attendance::all();
+
+        $attendanceArray[] = array();
+        $i = 0;
+
+        foreach($attendanceAll as $attendance){
+            $attendanceArray[$i] = $attendance;
+            $i++;
+        }
+
+        $attendances = $this->paginate($attendanceArray, 5, null, ['path'=>"/user-attendance"]);
+
+        return view('/user-attendance')->with([
+            'userName' => $userName,
+            'attendances' => $attendances
+        ]);        
+    }
 }

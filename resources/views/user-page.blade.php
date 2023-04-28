@@ -16,10 +16,12 @@
           <th>メールアドレス</th>
         </tr>
         @foreach($users as $user)
-        <tr class="table__value" >
-            <td>{{ $user->name }}</td>
+        <form action="/user-attendance" method="get">
+          <tr class="table__value">
+            <td><a href="/user-attendance" name="name" value="{{ $user->name }}">{{ $user->name }}</a></td>
             <td>{{ $user->email }}</td>
-        </tr>
+          </tr>
+        </form>
         @endforeach
       </table>
     </div>

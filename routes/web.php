@@ -41,3 +41,4 @@ Route::get('/attendance',[AttendanceController::class, 'performanceSomeDay']);
 
 Route::get('/user-page', [AttendanceController::class, 'getUserList']);
 
+Route::get('/user-attendance', [AttendanceController::class, 'performanceEachUser']);

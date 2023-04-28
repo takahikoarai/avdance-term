@@ -24,11 +24,13 @@
           <th>勤務時間</th>
         </tr>
         @foreach($attendances as $values)
-        <tr class="table__value" >
-          @foreach($values as $sub_value)
-            <td>{{ $sub_value }}</td>
+        <form action="/user-attendance" method="get">
+          <tr class="table__value" >
+            @foreach($values as $sub_value)
+            <td><a href="/user-attendance" name="name" value="{{ $sub_value }}" class="table__link">{{ $sub_value }}</a></td>
           @endforeach
-        </tr>
+          </tr>
+        </form>
         @endforeach
       </table>
     </div>
