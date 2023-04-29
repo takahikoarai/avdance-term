@@ -6,7 +6,7 @@ main{
   padding: 20px 0;
 }
 
-.main__title{
+.main-title{
   font-weight: bold;
   text-align: center;
 }
@@ -16,7 +16,7 @@ main{
   color: red;
 }
 
-.main__attendance{
+.main-attendance{
   display: flex;
   justify-content: center;
   margin-bottom: 50px;
@@ -29,6 +29,6 @@ main{
   margin-bottom: 30px;
 }
 
-.attendance__left{
+.attendance-left{
   margin-right: 30px;
 }

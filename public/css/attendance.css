@@ -4,7 +4,7 @@ svg.w-5.h-5 {
   height: 30px;
 }
 
-.main__inner{
+.main-inner{
   width: 90%;
   margin: 0 auto;
   text-align: center;
@@ -17,11 +17,11 @@ svg.w-5.h-5 {
   margin-bottom: 20px;
 }
 
-.date__today{
+.date-today{
   margin: 0 20px;
 }
 
-.result__table{
+.result-table{
   table-layout: fixed;
   width: 100%;
   text-align: center;
@@ -29,11 +29,11 @@ svg.w-5.h-5 {
   border-collapse: collapse;
 }
 
-.table__title{
+.table-title{
   line-height: 50px;
 }
 
-.table__value{
+.table-value{
   border-top: 1px solid #d4cfce;
   line-height: 50px;
 }

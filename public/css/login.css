@@ -1,4 +1,4 @@
-.login__title{
+.login-title{
   font-size: 25px;
   font-weight: bold;
   text-align: center;
@@ -14,13 +14,13 @@
   width: 100%;
 }
 
-.linktoregister{
+.link-register{
   text-align: center;
   margin-top: 20px;
   font-size: 13px;
 }
 
-.linktoregister a {
+.link-register a {
   color: blue;
   text-decoration: none;
 }

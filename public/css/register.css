@@ -1,4 +1,4 @@
-.register__title{
+.register-title{
     font-size: 25px;
     font-weight: bold;
     text-align: center;
@@ -15,13 +15,13 @@
   margin-top: 15px;
 }
 
-.linktologin{
+.link-login{
   text-align: center;
   margin-top: 20px;
   font-size: 13px;
 }
 
-.linktologin a {
+.link-login a {
   color: blue;
   text-decoration: none;
 }

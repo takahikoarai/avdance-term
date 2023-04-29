@@ -7,16 +7,16 @@
 @section('content')
     <div class="date">
       <form action="/attendance" method="get">
-        <button name="date" id="prev" value="{{ $today }}"><</button>
+        <button name="date" id="prev" value="{{ $today }}">&lt;</button>
       </form>
-      <p class="date__today">{{ $today }}</p>
+      <p class="date-today">{{ $today }}</p>
       <form action="/attendance" method="get">
-        <button name="date" id="next" value="{{ $today }}">></button>
+        <button name="date" id="next" value="{{ $today }}">&gt;</button>
       </form>
     </div>
     <div class="result">
-      <table class="result__table">
-        <tr class="table__title">
+      <table class="result-table">
+        <tr class="table-title">
           <th>名前</th>
           <th>勤務開始</th>
           <th>勤務終了</th>

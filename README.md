@@ -1,64 +1,51 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
+# Atte
+「Atte」は勤怠管理ができるアプリです。
+会員登録することで毎日の勤怠を記録でき、日付別の勤怠記録の閲覧もできます。
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+![Atteのトップページ（打刻ページ）](https://user-images.githubusercontent.com/114977962/235214443-a7761715-380e-4851-8034-988d7e75aceb.png)
 
-## About Laravel
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 作成した目的
+このアプリはLaravel学習の総まとめとして作成しました。
+与えられた要件や成果物イメージをもとに、テーブル定義・ER図作成・コーディングをおこないました。
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## アプリケーションURL
+デプロイしていないため、アプリケーションURLはありません。
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## 他のリポジトリ
+関連するリポジトリはありません。
 
-## Learning Laravel
+## 機能一覧
+- 会員登録機能（入力項目は名前、メールアドレス、パスワード、確認用パスワード）
+- ログイン（メールアドレスとパスワードで認証）・ログアウト機能
+- 勤怠の打刻機能
+  - 出勤・退勤の打刻
+  - 休憩開始・終了の打刻
+- 全ユーザーの日付別勤怠記録の表示
+- ユーザー一覧（名前、メールアドレス）の表示
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### 機能に関する注釈
+1. 出勤中に日付をまたいだ場合は、自動で出勤日の「23:59:59」に退勤が打刻され、その翌日の「0:00:00」に出勤が打刻されます。
+2. 出勤中は何度でも休憩できます。
+3. 日付別勤怠ページで当日を表示した場合、出勤記録があっても退勤が記録されていなければ勤怠記録として表示されません。
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## 使用技術および実行環境
+- Laravel 8.83.27
+- Laravel Breeze
+- MySQL 5.7.34
+- MacOS
 
-## Laravel Sponsors
+## テーブル設計
+![Atteのテーブル設計](https://user-images.githubusercontent.com/114977962/235214895-5fa9fb5e-06fa-49b3-9a25-85cc279e7572.png)
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+## ER図
+![AtteのER図](https://user-images.githubusercontent.com/114977962/235215322-c90227a9-7c4c-4bac-a82c-6c670be7d7e6.png)
 
-### Premium Partners
+# 環境構築
+特にありません。
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## 各ブランチの説明
+- main：完成版
+- create-user-page：追加実装①ユーザー一覧ページおよびユーザー別勤怠一覧の追加
+- test：git学習用のブランチ
+- modify：git学習用のブランチ
