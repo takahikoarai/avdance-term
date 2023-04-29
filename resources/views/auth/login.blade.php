@@ -12,7 +12,7 @@
                 <x-application-logo class="w-20 h-20 fill-current text-gray-500" />
             </a>
         </x-slot> -->
-        <div class="login__title">
+        <div class="login-title">
             <h1>ログイン</h1>
         </div>
         <!-- Session Status -->
@@ -62,7 +62,7 @@
                 <button class=" button-login">ログイン</button>
             </div>
         </form>
-        <div class="linktoregister">
+        <div class="link-register">
             <p class="register-message">アカウントをお持ちでない方はこちらから</p>
             <a href="{{ route('register') }}" class="ml-4 text-sm text-gray-700 dark:text-gray-500 underline">会員登録</a>
         </div>                  

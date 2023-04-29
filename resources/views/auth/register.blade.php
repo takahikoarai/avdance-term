@@ -11,7 +11,7 @@
                 <x-application-logo class="w-20 fill-current text-gray-500" />
             </a>
         </x-slot> -->
-        <div class="register__title">
+        <div class="register-title">
             <h1>会員登録</h1>
         </div>
         
@@ -55,7 +55,7 @@
             </div>
 
             <button class=" button-register">会員登録</button>
-            <div class="linktologin">
+            <div class="link-login">
                 <!-- <x-button class="button-register">
                     {{ __('Register') }}
                 </x-button> -->

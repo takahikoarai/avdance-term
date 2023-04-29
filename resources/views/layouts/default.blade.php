@@ -9,33 +9,33 @@
 </head>
 <body>
     <header>
-    <div class="header__inner">
-      <div class="header__title">
-        <a href="/" class="header__title">Atte</a>
+    <div class="header-inner">
+      <div class="header-title">
+        <a href="/" class="header-title">Atte</a>
       </div>
-      @if(Auth::check())
+      @if (Auth::check())
         <nav>
           <ul>
-            <li class="nav__item"><a href="/">ホーム</a></li>
-            <li class="nav__item">
+            <li class="nav-item"><a href="/">ホーム</a></li>
+            <li class="nav-item">
               <!-- ここはaタグでよいのでは -->
               <form action="/attendance" method="get">
-                <button class="nav__attendance" name="date" value="today">日付一覧</button>
+                <button class="nav-attendance" name="date" value="today">日付一覧</button>
               </form>
             </li>
-            <li class="nav__item">
-              <form action="{{route('logout')}}" method="post">
+            <li class="nav-item">
+              <form action="{{ route('logout') }}" method="post">
                 @csrf
-                <button class="nav__logout">ログアウト</button>
+                <button class="nav-logout">ログアウト</button>
+              </form>
             </li>
-            </form>
           </ul>
         </nav>
       @endif
     </div>
   </header>
   <main>
-    <div class="main__inner">
+    <div class="main-inner">
       @yield('content')
     </div>
   </main>

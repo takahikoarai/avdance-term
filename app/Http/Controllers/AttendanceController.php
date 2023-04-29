@@ -21,12 +21,12 @@ class AttendanceController extends Controller
         $user = Auth::user();
         $oldAttendance = Attendance::where('user_id', $user->id)->latest()->first();
         $oldDay = '';
-        if($oldAttendance){
+        if ($oldAttendance) {
             $oldAttendanceDay = new Carbon($oldAttendance->date);
             $today = Carbon::today();
 
             return ($oldAttendanceDay == $today) && ((!$oldAttendance->end_time));
-        }else{
+        } else {
             return false;
         }
     }
@@ -38,7 +38,7 @@ class AttendanceController extends Controller
         $oldAttendance = Attendance::where('user_id', $user->id)->latest()->first();
         $oldDay = '';
         
-        if($oldAttendance){
+        if ($oldAttendance) {
             $oldDay = new Carbon($oldAttendance->date);
         }
 
@@ -54,14 +54,14 @@ class AttendanceController extends Controller
         $oldRest ='';
         $oldDay = '';
 
-        if(Attendance::where('user_id', $user->id)->exists()){
+        if (Attendance::where('user_id', $user->id)->exists()) {
             $attendance = Attendance::where('user_id', $user->id)->latest()->first();
 
-            if(Rest::where('attendance_id', $attendance->id)->exists()){
+            if (Rest::where('attendance_id', $attendance->id)->exists()) {
                 $oldRest = Rest::where('attendance_id', $attendance->id)->latest()->first();
             }
 
-            if($oldRest){
+            if ($oldRest) {
                 $oldRestStartTime = new Carbon($oldRest->start_time);
                 $oldDay = $oldRestStartTime->startOfday();
             }
@@ -125,14 +125,14 @@ class AttendanceController extends Controller
     //打刻ページを表示
     public function index()
     {
-        if(Auth::check()){
+        if (Auth::check()) {
             $user = Auth::user();
             $oldAttendance = Attendance::where('user_id', $user->id)->latest()->first();
-            if($oldAttendance){
+            if ($oldAttendance) {
                 $oldDay = new carbon($oldAttendance->date);
                 $today = Carbon::today();
-                if($oldDay == $today->subDay()){
-                    if(($oldAttendance->start_time) && (!$oldAttendance->end_time)){
+                if ($oldDay == $today->subDay()) {
+                    if (($oldAttendance->start_time) && (!$oldAttendance->end_time)) {
                         $oldAttendance->update([
                             'end_time' => '23:59:59',
                         ]);
@@ -147,7 +147,7 @@ class AttendanceController extends Controller
                 $isWorkStarted = $this->didWorkStart();
                 $isWorkEnded = $this->didWorkEnd();
                 $isRestStarted = $this->didRestStart();
-            }else{
+            } else {
                 $isWorkStarted = false;
                 $isWorkEnded = false;
                 $isRestStarted = false;
@@ -160,7 +160,7 @@ class AttendanceController extends Controller
                 'isRestStarted' => $isRestStarted,
             ];
             return view('/index', $param);
-        }else{
+        } else {
             return redirect('/login');
         }
     }
@@ -195,24 +195,24 @@ class AttendanceController extends Controller
         $user = Auth::user();
         $attendance = Attendance::where('user_id', $user->id)->latest()->first();
 
-        if($attendance){
-            if(empty($attendance->end_time)){
+        if ($attendance) {
+            if (empty($attendance->end_time)) {
                 $attendance->update([
                     'end_time' => Carbon::now()
                 ]);
                 return redirect()->back();
-            }else{
+            } else {
                 $today = new Carbon();
                 $day = $today->day;
                 $oldAttendanceEndTime = new carbon();
                 $oldAttendanceEndTimeDay = $oldAttendanceEndTime->day;
-                if($day == $oldAttendanceEndTimeDay){
+                if ($day == $oldAttendanceEndTimeDay) {
                     return redirect()->back();
-                }else{
+                } else {
                     return redirect()->back();
                 }
             }
-        }else{
+        } else {
             return redirect()->back();
         }
     }
@@ -247,7 +247,7 @@ class AttendanceController extends Controller
         $isRestStarted = $this->didRestStart();
 
         //end_timeが存在しない場合は、end_timeを格納
-        if($oldRest->start_time && !$oldRest->end_time){
+        if ($oldRest->start_time && !$oldRest->end_time) {
             $oldRest->update([
                 'end_time' => Carbon::now(),
             ]);
@@ -261,9 +261,9 @@ class AttendanceController extends Controller
 
     public function performanceSomeDay(Request $request)
     {
-        if(is_null($request->date) || ($request->date == "today")){
+        if (is_null($request->date) || ($request->date == "today")) {
             $today = Carbon::today()->format('Y-m-d');
-        }else{
+        } else {
             $today = $request->date;
         }
         
@@ -271,13 +271,15 @@ class AttendanceController extends Controller
         $i = 0;
 
         $attendanceTodayAll = Attendance::where('date', $today)->get();
-        foreach($attendanceTodayAll as $attendanceToday){
-            if($attendanceToday->end_time){
-                $restTodayAll = Rest::where('attendance_id', $attendanceToday->id)->get();
+        foreach ($attendanceTodayAll as $attendanceToday) {
+            if ($attendanceToday->end_time) {
+                $restTodayAll = Rest::where(
+                    'attendance_id', $attendanceToday->id
+                    )->get();
 
                 $restTimeDiffInSecondsTotal = 0;
 
-                foreach($restTodayAll as $restToday){
+                foreach ($restTodayAll as $restToday) {
                     $restTime = $this->calculateRestTime($restToday);
                     $restTimeDiffInSecondsTotal += $restTime;
                 }
@@ -288,7 +290,12 @@ class AttendanceController extends Controller
             }
         }
 
-        $attendances = $this->paginate($resultArray, 5, null, ['path'=>"/attendance?date={$today}"]);
+        $attendances = $this->paginate(
+            $resultArray,
+            5,
+            null,
+            ['path'=>"/attendance?date={$today}"]
+        );
 
         return view('/attendance')->with([
             'today' => $today,
@@ -302,7 +309,13 @@ class AttendanceController extends Controller
     {
         $page = $page ?: (Paginator::resolveCurrentPage() ?: 1);
         $items = $items instanceof Collection ? $items : Collection::make($items);
-        return new LengthAwarePaginator($items->forPage($page, $perPage), $items->count(), $perPage, $page, $options);
+        return new LengthAwarePaginator(
+            $items->forPage($page, $perPage),
+            $items->count(),
+            $perPage,
+            $page,
+            $options
+        );
     }
 
 }
