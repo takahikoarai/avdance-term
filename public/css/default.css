@@ -21,6 +21,10 @@
   text-align: right;
 }
 
+.nav-item:not(:nth-child(4)) {
+  margin-right: 10px;
+}
+
 .nav-item a {
   color: black;
   text-decoration: none;

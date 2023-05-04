@@ -23,12 +23,15 @@
           <th>休憩時間</th>
           <th>勤務時間</th>
         </tr>
-        @foreach ($attendances as $values)
-        <tr class="table-value">
-          @foreach ($values as $sub_value)
-            <td>{{ $sub_value }}</td>
+        @foreach($attendances as $values)
+        <form action="/user-attendance" method="get">
+          <tr class="table-value table-value-info" >
+            @foreach($values as $sub_value)
+            <td>
+                <button  name="name" value="{{ $sub_value }}" class="name-button">{{ $sub_value }}</button></td>
           @endforeach
-        </tr>
+          </tr>
+        </form>
         @endforeach
       </table>
     </div>

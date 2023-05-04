@@ -1,0 +1,3 @@
+.table-value td:nth-child(2) {
+  display: none;
+}

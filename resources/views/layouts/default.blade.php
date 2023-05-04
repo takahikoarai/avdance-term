@@ -23,6 +23,7 @@
                 <button class="nav-attendance" name="date" value="today">日付一覧</button>
               </form>
             </li>
+            <li class="nav-item"><a href="/user-page">ユーザー一覧</a></li>
             <li class="nav-item">
               <form action="{{ route('logout') }}" method="post">
                 @csrf
