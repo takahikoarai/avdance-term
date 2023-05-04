@@ -39,7 +39,7 @@
   </div>
   <div class="paginate">
     <form action="/attendance" method="get">
-      <input type="hidden" name="date" value="">
+      <input type="hidden" name="date">
         {{ $attendances->links() }}
       </form>
   </div>

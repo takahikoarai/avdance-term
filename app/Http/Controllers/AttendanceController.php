@@ -349,7 +349,7 @@ class AttendanceController extends Controller
         $i = 0;
 
         $userInfo = User::where('name', $userName)->first();
-        $userId = $userInfo->id + 1;
+        $userId = $userInfo->id;
         //まずはattendanceの配列を用意
         $userAttendanceAll = Attendance::where('user_id', $userId)->get();
 
@@ -372,7 +372,12 @@ class AttendanceController extends Controller
             }
         }
 
-        $attendances = $this->paginate($resultArray, 5, null, ['path'=>"/user-attendance?name={$userName}"]);
+        $attendances = $this->paginate(
+            $resultArray,
+            5,
+            null,
+            ['path'=>"/user-attendance?name={$userName}"]
+        );
 
         return view('/user-attendance')->with([
             'attendances' => $attendances,
