@@ -37,8 +37,8 @@ Route::post('/workEnd', [AttendanceController::class, 'workEnd']);
 Route::post('/restStart', [AttendanceController::class, 'restStart']);
 Route::post('/restEnd', [AttendanceController::class, 'restEnd']);
 
-Route::get('/attendance',[AttendanceController::class, 'performanceSomeDay']);
+Route::get('/attendance',[AttendanceController::class, 'infoSomeDay']);
 
 Route::get('/user-page', [AttendanceController::class, 'getUserList']);
 
-Route::get('/user-attendance', [AttendanceController::class, 'performanceEachUser']);
+Route::get('/user-attendance', [AttendanceController::class, 'infoEachUser']);

@@ -6,19 +6,21 @@
 
 @section('title', 'ユーザー一覧')
 @section('content')
-    <div class="user__title">
+    <div class="user-title">
       <h1>ユーザー一覧</h1>
     </div>
     <div class="result user-list">
-      <table class="result__table user-table">
-        <tr class="table__title">
+      <table class="result-table user-table">
+        <tr class="table-title">
           <th>名前</th>
           <th>メールアドレス</th>
         </tr>
-        @foreach($users as $user)
+        @foreach ($users as $user)
         <form action="/user-attendance" method="get">
-          <tr class="table__value">
-            <td><a href="/user-attendance" name="name" value="{{ $user->name }}">{{ $user->name }}</a></td>
+          <tr class="table-value table-value-user">
+            <td>
+              <button  name="name" value="{{ $user->name }}" class="name-button">{{ $user->name }}</button>
+            </td>
             <td>{{ $user->email }}</td>
           </tr>
         </form>

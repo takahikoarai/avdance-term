@@ -7,29 +7,30 @@
 @section('title', 'ユーザー別勤怠ページ')
 @section('content')
   <div class="user-name">
-    <p>{{ $userName }}</p>
+    <p>{{ $userName }}さんの勤怠記録</p>
   </div>
-  <div class="date">
-    <form action="/attendance" method="get">
-      <button name="date" id="prev" value=""><</button>
+  {{-- 月ごとに表示したい --}}
+  {{-- <div class="date">
+    <form action="" method="get">
+      <button name="" id="prev" value="">&lt;</button>
     </form>
-    <p class="date__today">今月</p>
-    <form action="/attendance" method="get">
-      <button name="date" id="next" value="">></button>
+    <p class="date-today">今月</p>
+    <form action="" method="get">
+      <button name="" id="next" value="">&gt;</button>
     </form>
-  </div>
+  </div> --}}
   <div class="result">
-    <table class="result__table">
-      <tr class="table__title">
+    <table class="result-table">
+      <tr class="table-title">
         <th>日付</th>
         <th>勤務開始</th>
         <th>勤務終了</th>
         <th>休憩時間</th>
         <th>勤務時間</th>
       </tr>
-      @foreach($attendances as $values)
-      <tr class="table__value" >
-        @foreach($values as $sub_value)
+      @foreach ($attendances as $values)
+      <tr class="table-value">
+        @foreach ($values as $sub_value)
           <td>{{ $sub_value }}</td>
         @endforeach
       </tr>

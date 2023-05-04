@@ -25,9 +25,10 @@
         </tr>
         @foreach($attendances as $values)
         <form action="/user-attendance" method="get">
-          <tr class="table__value" >
+          <tr class="table-value table-value-info" >
             @foreach($values as $sub_value)
-            <td><a href="/user-attendance" name="name" value="{{ $sub_value }}" class="table__link">{{ $sub_value }}</a></td>
+            <td>
+                <button  name="name" value="{{ $sub_value }}" class="name-button">{{ $sub_value }}</button></td>
           @endforeach
           </tr>
         </form>

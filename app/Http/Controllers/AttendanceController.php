@@ -103,7 +103,10 @@ class AttendanceController extends Controller
         $userId = User::where('id', $attendanceToday->user_id)->first();
         $userName = $userId->name;
 
+        $date = $attendanceToday->date;
+
         $param = [
+            'date' => $date,
             'userName' => $userName,
             'attendanceStartTime' => $attendanceStartTime,
             'attendanceEndTime' =>$attendanceEndTime,
@@ -259,7 +262,8 @@ class AttendanceController extends Controller
         ]);
     }
 
-    public function performanceSomeDay(Request $request)
+    //「日付一覧」で表示される、全ユーザーの日付別勤怠情報
+    public function infoSomeDay(Request $request)
     {
         if (is_null($request->date) || ($request->date == "today")) {
             $today = Carbon::today()->format('Y-m-d');
@@ -338,25 +342,41 @@ class AttendanceController extends Controller
     }
 
     //ユーザー別勤怠一覧の取得
-    public function performanceEachUser(Request $request){
+    public function infoEachUser(Request $request){
         $userName = $request->name;
 
-        //$userNameで絞り込みたい
-        $attendanceAll = Attendance::all();
-
-        $attendanceArray[] = array();
+        $resultArray[] = array();
         $i = 0;
 
-        foreach($attendanceAll as $attendance){
-            $attendanceArray[$i] = $attendance;
-            $i++;
+        $userInfo = User::where('name', $userName)->first();
+        $userId = $userInfo->id + 1;
+        //まずはattendanceの配列を用意
+        $userAttendanceAll = Attendance::where('user_id', $userId)->get();
+
+        foreach ($userAttendanceAll as $userAttendance) {
+            if ($userAttendance->end_time) {
+                $userRestAll = Rest::where(
+                    'attendance_id', $userAttendance->id
+                    )->get();
+
+                $restTimeDiffInSecondsTotal = 0;
+
+                foreach ($userRestAll as $userRest) {
+                    $restTime = $this->calculateRestTime($userRest);
+                    $restTimeDiffInSecondsTotal += $restTime;
+                }
+
+                $result = $this->actualWorkTime($userAttendance, $restTimeDiffInSecondsTotal);
+                $resultArray[$i] = $result;
+                $i++;
+            }
         }
 
-        $attendances = $this->paginate($attendanceArray, 5, null, ['path'=>"/user-attendance"]);
+        $attendances = $this->paginate($resultArray, 5, null, ['path'=>"/user-attendance?name={$userName}"]);
 
         return view('/user-attendance')->with([
+            'attendances' => $attendances,
             'userName' => $userName,
-            'attendances' => $attendances
         ]);        
     }
 }
